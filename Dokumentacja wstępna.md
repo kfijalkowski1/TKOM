@@ -363,12 +363,12 @@ bubble_sort(&arr)
 program                = statment, {statment} ;
 
 statment               = structure
-			           | function
-			           | expresion 
-			           | comment;
+                       | function
+                       | expresion 
+                       | comment;
 
 structure              = struct
-			           | union;
+                       | union;
 
 struct                 = "struct" "{", init, {methodes}, "}" ;
 init                   = "init", "(", attributes, {attributes}, ")" ;
@@ -380,15 +380,15 @@ union                  = "TaggedUnion", name, "{, no_scope_variable_dec, {no_sco
 function               = "fun", ("void" | type), name, "(", no_scope_variable_dec, {no_scope_variable_dec}, ")", "{", expresion, {expresion} "}";
 
 expresion              = conditional
-					   | variable
-					   | function_call
-					   | arithmatic_standalone;
+                       | variable
+                       | function_call
+                       | arithmatic_standalone;
 					   
 conditional            = ("if" | "while"), "(", condition, ")", "{", expresion, {expresion} "}";
 condition              = check, {(("or"|"and"), check)};
 check                  = variable_call
-					   | test
-					   | ("true" | "false") ;
+                       | test
+                       | ("true" | "false") ;
 test                   = value, tester, value;
 tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
 
