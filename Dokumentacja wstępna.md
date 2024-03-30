@@ -396,7 +396,7 @@ expresion              = conditional
 
 returnExp              = "return", value;
 
-matchExp               = "match", name, "{", matchCase, {matchCase}, "}";
+matchExp               = "match", (name | function_call), "{", matchCase, {matchCase}, "}";
 matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresion, {expresion}, "}"
 
 conditional            = if_condition
