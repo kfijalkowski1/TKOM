@@ -1,11 +1,11 @@
 #### Specyfikacja od prowadzącego:
 - silne
-- mutowalne 
+- mutowalne
 - wartość
 ### Działanie języka
 #### Typy danych z przykładami kodu typów danych
 ##### Podstawowe typy danych liczbowych:
-- Typ pełno liczbowy 
+- Typ pełno liczbowy
 	- `int a = 5`
 - Typ zmienno-przecinkowy
 	- `flt a = 5.0`
@@ -23,63 +23,29 @@
 ```
 >> str a = "\"ala\"\\\"jacek\" to\tosoby \n\t ważne"
 >> print(a)
-"ala"\"jacek" to    osoby 
+"ala"\"jacek" to    osoby
 	ważne
 ```
 ##### Typ logiczny:
 - `bool` przyjmuje wartości: `true` `false`
 	- `bool a = true`
-##### Inne typy danych (STL?):
--  lista - przechowuje kolekcję obiektów stałego typu, lista zaimplementowana w formacie linked listy, obiekty mogą być jednym z wbudowanych typów lub własnym typem, przy próbie dodania niepoprawnego typu do listy pojawia się #Error `TypeError`
-	- metody:
-		- length() -> zwraca długość listy
-		- get(int index) -> zwraca element na zadanym indeksie
-		- add(T obj) -> dodaje obiekt do listy
-		- set(int index, T obj) -> ustawia wartość obiektu na podanym adresie na podaną wartość 
-```
-list<int> a = []
-a.add(1)
-
-list<flt> b = [1.0]
-print(b.get(0)) # prints 1.0
-
-```
-- dict - przechowuje parę klucz wartość, przy próbie dodania niepoprawnego typu do dict-a pojawia się #Error `TypeError`
-	- metody:
-		- keys() -> zwraca listę kluczy
-		- get(key) -> zwraca obiekt od danego klucza
-```
-dict<str, flt> klucze = {"klucz": 1.2, "klucz1": 1.8}
-klucze.set("klucz") = 1.1
-```
-- Struktury: 
-	- umożliwiają na utworzenie własnej struktury z atrybutami o podanych typach 
-	- umożliwiają zdefiniowania własnych funkcji
-	- domyślnie i atrybuty i metody są **prywatne**, aby były publiczne należy dodać słowo kluczowe `pub` - public
-	- atrybuty są w sekcji init
-	- init jest obowiązkową częścią struct-a
-	- jest możliwość odwołania się do obiektu samego w sobie poprzez słowo kluczowe - `this` 
+##### Inne typy danych ():
+- Struktury:
+	- umożliwiają na utworzenie własnej struktury z atrybutami o podanych typach
 ```
 struct Box {
-	init (name, color, x) {
-		pub str name = name
-		const str color = color
-		int height = x
-	}
-	pub fun int volume() {
-		return (height ** 3)
-	}
-	fun bool isiBig() {
-		return this.volume() > 6
-	}	
+	str name
+	const str color
+	int height
 }
 
-Box b = Box("pudelko", "czarne", 1)
+Box b = Box("klocek", "zielony", 2)
+b.height = 5
 ```
 - Tagged union:
 	- obiekt przechowuje tylko jeden z możliwych typów zdefiniowanych przez programistę
-	- można wywołać na nim metodę `curType` w celu sprawdzenia aktualnego typu przechowywanego
-	- drugą metodą jest `data` zwracająca dane w obiekcie
+	- aby dostać się do wartości danego pola należy najpierw "zmatchować" odpowiednio tym przechowywany i dobrać do niego operacje
+	- programista nie musi obsługiwać wszystkich typów z danego TaggedUnion
 ```
 TaggedUnion Grade {
 	int numeric
@@ -88,8 +54,16 @@ TaggedUnion Grade {
 }
 
 Grade gr = Grade.numeric(1)
-if (gr.curType == Grade.numeric) {
-	print(str(gr.data))
+match gr {
+	Grade.numeric(value) {
+		print("int value " + str(value))
+	}
+	Grade.decriptional(value) {
+		print("str value " + value)
+	}
+	Grade.curved(value) {
+		print("flt value " + str(value))
+	}
 }
 ```
 ##### Rzutowanie typów
@@ -111,12 +85,10 @@ flt b = int(a)
 - Operatory - operator można użyć tylko między dwoma takimi samymi typami, nie jest dozwolone używanie różnych typów w momencie użycia dwóch różnych typów rzucany jest #Error `TypeError`:
 	- dodawanie  `+`;
 		- Typy: `int` `flt` `str`
-	- odejmowanie `-`; mnożenie `*`; dzielenie `/`; potęgowanie `**`; inkrementacja `+=`;  modulo `%` 
+	- odejmowanie `-`; mnożenie `*`; dzielenie `/`; potęgowanie `**`; inkrementacja `+=`;  modulo `%`
 		- Typy: `int` `flt`
-	- (pre/post)inkrementacja `++`; 
+	- (pre/post)inkrementacja `++`;
 		- Typy: `int`
-	- nawiasy  `()`
-		- Do użycia w skomplikowanych operacjach do modelowania priorytetów operacji
 	- nierówności `<` `<=` `>` `>=` `==` `!=`
 		- Typy: `int`, `flt`
 	- logiczne `or` `and`
@@ -145,13 +117,6 @@ aaaaa
 #### Funkcje wbudowane:
 - print - wypisanie tekstu na konsolę
 	- możliwe typy: `str`
-- input - odbiera jedną linijkę z konsoli wypisując uprzednio na konsolę tekst podany jako argument
-	- `str a = input("Wpis coś ")`
-- abs - wartość bezwzględna 2 liczb
-	- możliwe typy: `flt`, `int`
-- max - największa wartość z 2 podanych lub z listy podanych
-	- możliwe typy: (`int`, `int`), (`flt`, `flt`), `list`
-- range - zwraca listę `int`-ów z danego przedziału
 ```
 >>print(str(abs(max(-5, -1))))
 1
@@ -160,7 +125,7 @@ aaaaa
 #### Komentarze
 - jednolinijkowe -  rozpoczynające się od `#` i będące na końcu danej lini lub zaczynające się od nowej lini
 ```
-# komentarz 
+# komentarz
 int a = 1 # inny komentarz
 ```
 #### Semantyka zmiennych
@@ -171,9 +136,9 @@ int a = 1 # inny komentarz
 	- aby były niemutowalne należy dodać słowo kluczowe `const`:
 		- `cont int a = 5`
 - zakres widoczności zmiennych:
-	- przykrywanie zmiennych 
+	- przykrywanie zmiennych
 		- zmienne w ramach danego bloku lub w ramach swojej widoczności na czas swojej żywotności przykrywają zmienne o tej samej nazwie zdefiniowane wcześniej o widoczności większej.
-		- na przykład zmienna utworzona w bloku nadpisze zmienną globalną utworzoną wcześniej na czas istnienia bloku:
+		- na przykład zmienna utworzona w bloku przykryje zmienną globalną utworzoną wcześniej na czas istnienia bloku:
 ```
 int a = 6
 
@@ -187,8 +152,7 @@ test() # wypisze klocek
 
 ```
 - domyślnie blok (niektóre funkcje są duże i działają dość długo), mogą mieć widoczność funkcji/globalną
-	- widoczność danej zmiennej w całej funkcji może zostać osiągnięta przez słowo kluczowe `fscope` -> function scope
-	- widoczność danej zmiennej globalnie można osiągnąć poprzez słowo kluczowe `gscope` -> global scope
+	- widoczność danej zmiennej globalnie można osiągnąć poprzez słowo kluczowe `gscope` -> global scope, zmienne globalne są **niemutowalne!**
 	- przykład widoczności w bloku:
 ```
 fun test() {
@@ -202,15 +166,30 @@ fun test() {
 }
 ```
 - instrukcja warunkowa:
-	- if, budowa przykład kodu:
+	- `if` `else`, budowa przykład kodu:
 ```
 if (x == 1) {
 	print("1")
 }
 if (x == 1) { print ("1")}
+
+if (x == 1) {
+	print("1")
+} else {
+	print("else")
+}
+
+if (x == 1) {
+	print("1")
+} elif (x == 2) {
+	print("elseif")
+} else {
+	print("else")
+}
+
 ```
 - instrukcja pętli
-	- while - przykład kodu:
+	- `while` - przykład kodu:
 ```
 while (x == 1) {
 	print(str(x))
@@ -235,13 +214,13 @@ while (true) {
 - możliwość wołania - wywołanie funkcji następuje poprzez podanie nazwy funkcji oraz argumentów funkcji
 - przeciążanie funkcji **nie** jest możliwe
 - **nie** dopuszczane jest posiadanie funkcji i zmiennej o tych samych nazwach
-- może istnieć funkcja main działająca analogicznie jak w cpp 
+- może istnieć funkcja main działająca analogicznie jak w cpp
 ```
-fun flt kmToMiles(flt km) {
+fun kmToMiles(flt km) -> flt {
 	return km * 0.6
 }
 
-fun void changeKmToMiles(&flt km) {
+fun changeKmToMiles(&flt km) -> void {
 	km = km * 0.6
 }
 
@@ -253,9 +232,8 @@ changeKmToMiles(&milesRef)
 ```
 - rekursywne wywołania funkcji
 	- Jest możliwe ale istnieje limit: 500
-	- limit dla danej funkcji można zmienić za pomocą dekoratora nad funkcją: #QUESTION *wywalić dekorator, dać argument w wywołaniu interpretera?*
+	- limit dla danej funkcji można zmienić za pomocą dodania argumentu wywołania: recursion-limit = x, przykład w [[#Specyfikacja technologiczna]]
 ```
-@recursive-limit=800
 fun silnia(int n) {
 	if (n == 0) {
 		return 1
@@ -264,7 +242,7 @@ fun silnia(int n) {
 }
 ```
 #### Błędy
-- W wypadku wystąpienia błędu system zaprzestaje działanie "panikuje" poprzez wypisanie napotkanego błędu na konsole oraz miejsce gdzie został on napotkany, przykładowy błędny kod i wypisanie błędu: #todo wpisz errory wszystkie możliwe
+- W wypadku wystąpienia błędu system zaprzestaje działanie "panikuje" poprzez wypisanie napotkanego błędu na konsole oraz miejsce gdzie został on napotkany, przykładowy błędny kod i wypisanie błędu:
 ```
 1 int a = 8
 2 a = 9.3 # TypeError
@@ -273,9 +251,9 @@ fun silnia(int n) {
 ```
 >> simple file.si
 Traceback: file.si, line 2, character 4
-	TypeError: inncorect value for int 
+	TypeError: inncorect value for int
 ```
-##### Lista możliwych wyjątków
+##### Lista możliwych błędów
 - TypeError (przykład powyżej)
 - NameError - zmienna g nie istnieje:
 ```
@@ -310,36 +288,74 @@ fun func() {
 ```
 - OverflowError:
 ```
-int a = 10**100000 
+int a = 10**100000
 ```
 #### Złożone przykłady kodu
 
-#QUESTION *czy robić że istnieje w jakiejś formie main? (tak jak funkcja main w cpp)* za - fajnie żeby istniała jakoś sformalizowana przestrzeń w kodzie z której uruchamiany jest program, przeciw - w sumie po co, można i bez tego (chyba) a więcej pisać programista musi
-
 ```
-# Przykładowa implementacja sortowania bąbelkowego
+# Przykładowy kod
 
-fun list<int> bubble_sort(&list<int> arr) {
-	int n = arr.length()
-	int i = 0
-	while (i < n) {
-		int j = 0
-		while (j < (n - i-1)) {
-			if (arr.get(j) > arr.get(j+1)) {
-				int temp = arr.get(j)
-				arr.set(j, arr.get(j)
-				arr.set(j+1, temp)
-			}
-			k++
+struct Point {
+	flt x
+	flt y
+}
+
+struct Rectangle {
+	Point a
+	Point b
+	const str color
+}
+
+struct Circle {
+	Point center
+	flt radius
+}
+
+TaggedUnion Shape {
+	Circle cir
+	Rectangle rec
+}
+
+fun circleArea(&Circle c) -> flt {
+	return (3.14 * c.radius**)
+}
+
+fun rectangleArea(&rectangle r) -> flt {
+	return ((r.a.x - r.b.x) * (r.a.y - r.b.y))
+}
+
+fun shapeArea(&Shape s) -> flt {
+	match s {
+		Shape.cir(value) {
+			return circleArea(value)
 		}
-		i++
+		Shape.rec(value) {
+			return rectangleArea(value)
+		}
+	}
+
+
+fun runFun() -> void {
+	Circle c = Circle(Point(1.2, 2.1), 5.4)
+	Rectangle r = Rectangle(Point(1.1, 1.0), Point(2.1, 1.2))
+	Shape cShape = Shape.cir(c)
+	Shape rShape = Shape.rec(r)
+	
+	flt cArea = shapeArea(&cShape)
+	flt rArea = shapeArea(&rShape)
+	if (cArea > rArea) {
+		print("Circle won")
+	} elif (cArea < rArea) {
+		print("rec won")
+	} else {
+		print("draw)
 	}
 }
 
-list<int> arr = [1, 2, 3, 3, 2, 1]
-bubble_sort(&arr)
-
+runFun()
 ```
+
+
 #### Definicje
 - tagged union - typ danych któremu w definicji podajemy jakie typy może on przechowywać, może on przechowywać tylko jeden typ jednocześnie i jednocześnie ma znacznik jaki aktualnie typ przechowuje.
 - silne - typ ściśle określony, aby użyć w kontekście innego typu należy skonwertować, istnieją operacje dla konkretnych zestawów typów
@@ -354,7 +370,7 @@ bubble_sort(&arr)
 	- **Analizator semantyczny** - sprawdza poprawność znaczenia struktur składniowych
 	- **Obsługa błędów** - przerwanie przy pierwszym błędzie i wypisanie błędu, analogicznie do wyższego przykładu
 - Komunikacja między modułami może się odbywać za pomocą kolejki RabbitMQ, pomysł:
-	- Analizator leksykalny buforuje o maksymalnie jeden dodatkowy token w celu szybszej obsługi zapytań analizatora składniowego 
+	- Analizator leksykalny buforuje o maksymalnie jeden dodatkowy token w celu szybszej obsługi zapytań analizatora składniowego
 ![[struktura_projektu.drawio.png]]
 ### Gramatyka
 - Napisana w EBNF
@@ -364,62 +380,53 @@ program                = statment, {statment} ;
 
 statment               = structure
                        | function
-                       | expresion 
-                       | comment;
+                       | expresion;
 
-structure              = struct
-                       | union;
+structure              = ("struct" | "TaggedUnion"), name, "{, var_declar_l, {var_declar_l}, "}";
 
-struct                 = "struct" "{", init, {methodes}, "}" ;
-init                   = "init", "(", attributes, {attributes}, ")" ;
-attributes             = ["pub"], no_scope_variable;
-methodes               = ["pub"], function;
-
-union                  = "TaggedUnion", name, "{, no_scope_variable_dec, {no_scope_variable_dec}, "}";
-
-function               = "fun", ("void" | type), name, "(", no_scope_variable_dec, {no_scope_variable_dec}, ")", "{", expresion, {expresion} "}";
+function               = "fun", name, "(", {var_declar}, ")", "-", ">", (type | "void"), "{", expresion, {expresion} "}";
 
 expresion              = conditional
                        | variable
                        | function_call
-                       | arithmatic_standalone;
-					   
-conditional            = ("if" | "while"), "(", condition, ")", "{", expresion, {expresion} "}";
-condition              = check, {(("or"|"and"), check)};
-check                  = variable_call
+                       | arithmatic_standalone
+                       | matchExp
+                       | comment
+                       | returnExp;
+
+returnExp              = "return", value;
+
+matchExp               = "match", (name | function_call), "{", matchCase, {matchCase}, "}";
+matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresion, {expresion}, "}"
+
+conditional            = if_condition
+                        | loop_condition;
+if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"]
+loop_condition         = "while", condition, "{", expresion, {expresion} "}" ;
+condition              = "(", and_condition, ["or", and_condition], ")";
+and_condition          = check, {"and", check};
+check                  = name
                        | test
-                       | ("true" | "false") ;
+                       | bool ;
 test                   = value, tester, value;
 tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
 
-function_call          = [(name, ".")], name, "(", {(variable_call | value)}, ")"; (* also method call *)
+function_call          = [name, "."], name "(", [value, {"," value}] ")"; (* also method call *)
 
-variable               = variables_result_init | variables_value_init;
-variables_result_init  = [scope], [type], name, "=", (function_call | arithmetic_result );
-variables_value_init   = [scope], (primitive | composite-type | custom-type) ;
+variable               = ["gscope"], ["const"], [type], name, "=", value;
 
-primitive              = (["int"], name, "=", int)
-                       | (["flt"], name, "=", flt)
-                       | (["str"], name, "=", str);
-composite-type         = (["list"], name, "=", list)
-					   | (["dict"], name, "=", dict);
-custom-type-var        = type, name, "=", customTypeInit; (*name of var, name of type *)
+var_declar             = type, name;
+var_declar_l           = ["const"], var_declar;
 
-no_scope_variable_dec  = type, name;
-
-type                   = ["&"], (normalType | dictType | listType | customTypeName);
-normalType             = "int" | "flt" | "str";
-listType               = "list", "<", type, ">";
-dictType               = "dict", "<", type, ",", type, ">";
-name                   = "[a-zA-Z0-9]*";
+type                   = ["&"], (normalType | customTypeName);
+normalType             = "int" | "flt" | "str" | "bool";
+name                   = [&], "[a-zA-Z][a-zA-Z0-9]*";
 numeric_value          = int | flt;
 int                    = non-zero-digit, {digit};
 flt                    = int, ".", digit;
 str                    = "\"[^"]*\"";
-list                   = "[", [value], {",", value}, "]"
-dict                   = "{", {(value, ":", value)}, "}"
-value                  = int | flt | str | list | dict | customType | name | arithmetic_result | function_call;
-customTypeInit         = name "(", value, ")";
+bool                   = "true" | "false";
+value                  = int | flt | str | name | arithmetic_result | function_call;
 customTypeName         = name;
 digit                  = "[0-9]"
 non-zero-digit         = "[1-9]"
@@ -427,13 +434,12 @@ comment                = "#.*$"
 
 arithmatic_standalone  = name, ("++" | ("+=" (name | numeric_value) ))
 
-arithmetic_result      = arithmetic_2tier, {("+" | "-"), arithmetic_2tier};
-arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%" | "+="), arithmetic_3tier};
+arithmetic_result      = arithmetic_2tier, {("+" | "-", ""+=), arithmetic_2tier};
+arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%"), arithmetic_3tier};
 arithmetic_3tier       = arithmetic_prod, ["++", "**"];
-arithmetic_prod        = numeric_value | name | "(" , arithmetic_result, ")";
+arithmetic_prod        = numeric_value | value | "(" , arithmetic_result, ")";
 ```
 
-#QUESTION jaki sens ma value jak na końcu jest name (nazwa zmiennej), która jest w sumie czymkolwiek, powtarzanie się name
 #QUESTION jak wziąść pod uwagę komentarze na końcu lini
 ### Specyfikacja technologiczna
 
@@ -446,7 +452,10 @@ arithmetic_prod        = numeric_value | name | "(" , arithmetic_result, ")";
 ```
 java -jar Speed.jar fileName
 ```
-Program przechwytuje terminal w którym został uruchomiony i wypisuje na niego oraz pobiera z nich dane
+Program przechwytuje terminal w którym został uruchomiony i wypisuje na niego oraz pobiera z nich dane, opcjonalnie można podawać limit rekursji:
+```
+java -jar Speed.jar fileName --recursion-limit=800
+```
 #### Testy
 - poza testami jednostkowymi wybranych części kodu:
 	- analizator leksykalny będzie dostawał ciąg znaków i sprawdzany będzie czy przekazany token będzie taki jak spodziewany
