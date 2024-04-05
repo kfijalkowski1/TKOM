@@ -118,7 +118,7 @@ aaaaa
 - print - wypisanie tekstu na konsolę
 	- możliwe typy: `str`
 ```
->>print(str(abs(max(-5, -1))))
+>>print(1)
 1
 ```
 
@@ -460,3 +460,26 @@ java -jar Speed.jar fileName --recursion-limit=800
 - poza testami jednostkowymi wybranych części kodu:
 	- analizator leksykalny będzie dostawał ciąg znaków i sprawdzany będzie czy przekazany token będzie taki jak spodziewany
 	- do analizatora składniowego będzie sprawdzane czy po danych tokenach zwraca odpowiednie struktury składniowe
+
+
+# Analizator leksykalny
+
+### Tokeny
+
+| Typ                         | Wartość                                                                             | Pozycja tekstowa | Pozycja w tekście |
+| --------------------------- | ----------------------------------------------------------------------------------- | ---------------- | ----------------- |
+| Słowa kluczowe              | int, flt, fun, match, str, bool, struct, TaggedUnion, print, const, while, if, elif |                  |                   |
+| Operator addytywny          | +, -                                                                                |                  |                   |
+| Operator multiplikowany     | \*, /, %                                                                            |                  |                   |
+| Operator inkrementacyjny    | ++, +=, **                                                                          |                  |                   |
+| Operator relacji            | >, >=, <, <=, \==, !=                                                               |                  |                   |
+| operator przypisania        | =                                                                                   |                  |                   |
+| operator zwracanego typu    | ->                                                                                  |                  |                   |
+| Wartości numeryczne         | 1, 2, 1.2...                                                                        |                  |                   |
+| Wartości tekstowe           | ".*"                                                                                |                  |                   |
+| Operatory nawiasowe         | (, ), {, }                                                                          |                  |                   |
+| Operator referencji         | &                                                                                   |                  |                   |
+| Operator wartości struktury | .                                                                                   |                  |                   |
+| separator instrukcji        | \\n                                                                                 |                  |                   |
+
+### Automat skończony analizatora leksykalnego
