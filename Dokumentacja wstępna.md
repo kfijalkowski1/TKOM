@@ -466,20 +466,24 @@ java -jar Speed.jar fileName --recursion-limit=800
 
 ### Tokeny
 
-| Typ                         | Wartość                                                                             | Pozycja tekstowa | Pozycja w tekście |
-| --------------------------- | ----------------------------------------------------------------------------------- | ---------------- | ----------------- |
-| Słowa kluczowe              | int, flt, fun, match, str, bool, struct, TaggedUnion, print, const, while, if, elif |                  |                   |
-| Operator addytywny          | +, -                                                                                |                  |                   |
-| Operator multiplikowany     | \*, /, %                                                                            |                  |                   |
-| Operator inkrementacyjny    | ++, +=, **                                                                          |                  |                   |
-| Operator relacji            | >, >=, <, <=, \==, !=                                                               |                  |                   |
-| operator przypisania        | =                                                                                   |                  |                   |
-| operator zwracanego typu    | ->                                                                                  |                  |                   |
-| Wartości numeryczne         | 1, 2, 1.2...                                                                        |                  |                   |
-| Wartości tekstowe           | ".*"                                                                                |                  |                   |
-| Operatory nawiasowe         | (, ), {, }                                                                          |                  |                   |
-| Operator referencji         | &                                                                                   |                  |                   |
-| Operator wartości struktury | .                                                                                   |                  |                   |
-| separator instrukcji        | \\n                                                                                 |                  |                   |
+| Typ                         | Wartość                                                                                                   | Pozycja tekstowa | Pozycja w tekście |
+| --------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------- | ----------------- |
+| Słowa kluczowe              | int, flt, fun, match, str, bool, struct, TaggedUnion, print, const, while, if, elif, and, or, not, return |                  |                   |
+| Operator addytywny          | +, -                                                                                                      |                  |                   |
+| Operator multiplikowany     | \*, /, %                                                                                                  |                  |                   |
+| Operator inkrementacyjny    | ++, +=, **                                                                                                |                  |                   |
+| Operator relacji            | >, >=, <, <=, \==, !=                                                                                     |                  |                   |
+| operator przypisania        | =                                                                                                         |                  |                   |
+| operator zwracanego typu    | ->                                                                                                        |                  |                   |
+| Wartości numeryczne         | 1, 2, 1.2...                                                                                              |                  |                   |
+| Wartości tekstowe           | ".*"                                                                                                      |                  |                   |
+| Operatory nawiasowe         | (, ), {, }                                                                                                |                  |                   |
+| Operator referencji         | &                                                                                                         |                  |                   |
+| Operator wartości struktury | .                                                                                                         |                  |                   |
+| nazwa zmiennej              | .*                                                                                                        |                  |                   |
 
-### Automat skończony analizatora leksykalnego
+### Ograniczenia wartości zmiennych:
+- Zakres int-a-> (-2147483647, 2147483647)
+- Dokładność float-a -> zakres taki sam jak int, oraz 10 cyfr po przecinku
+- Max długość string-a -> 200 
+

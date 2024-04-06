@@ -16,7 +16,7 @@ public class FileSource implements Source {
     public FileSource(String path) throws IOException {
         fileReader = new FileReader(path);
         poss = new Possition(true);
-
+        getNextChar(); // move to first char
     }
 
     @Override

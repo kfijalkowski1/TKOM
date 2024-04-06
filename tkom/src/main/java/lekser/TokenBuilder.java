@@ -1,7 +1,8 @@
 package lekser;
 
 import inputHandle.Source;
-import lekser.tokenBuilderUtils.TokenNumberBuilder;
+import lekser.tokenBuilderUtils.TokenNumberAndStringBuilder;
+import lekser.tokenBuilderUtils.TokenOperatorBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +18,6 @@ public class TokenBuilder {
     public Token getNextToken() {
         List<Function<Source, Token>> tokenBuilders = getBuilderFunctions();
         Token result;
-        if (src.getCurrentChar() == '\u0003') {
-            return new Token(TokenType.END_OF_TEXT, src.getPossition());
-        }
-        src.getNextChar();
 
         while(Character.isWhitespace(src.getCurrentChar())) {
             src.getNextChar();
@@ -33,21 +30,29 @@ public class TokenBuilder {
             }
         }
 
-        if (src.getCurrentChar() == '\u0003') {
-            return new Token(TokenType.END_OF_TEXT, src.getPossition());
-        }
         return new Token(TokenType.UNKNOWN_TOKEN, src.getPossition());
     }
 
     private List<Function<Source, Token>> getBuilderFunctions() {
         return Arrays.asList(
-                s -> {
-                    try {
-                        return TokenNumberBuilder.buildNumber(s);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+                TokenNumberAndStringBuilder::buildNumber,
+                TokenNumberAndStringBuilder::stringBuilder,
+                TokenOperatorBuilder::plusBuilder,
+                TokenOperatorBuilder::minusBuilder,
+                TokenOperatorBuilder::multipleBuilder,
+                TokenOperatorBuilder::divideBuilder,
+                TokenOperatorBuilder::moduloBuilder,
+                TokenOperatorBuilder::lessBuilder,
+                TokenOperatorBuilder::moreBuilder,
+                TokenOperatorBuilder::equalsBuilder,
+                TokenOperatorBuilder::notEquals,
+                TokenOperatorBuilder::openSharpBrackets,
+                TokenOperatorBuilder::closeSharpBrackets,
+                TokenOperatorBuilder::openSoftBrackets,
+                TokenOperatorBuilder::closeSoftBrackets,
+                TokenOperatorBuilder::dotOperator,
+                TokenOperatorBuilder::endOfTextOperator,
+                TokenOperatorBuilder::refOperator
         );
     }
 

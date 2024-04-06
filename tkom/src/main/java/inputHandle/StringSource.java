@@ -20,6 +20,7 @@ public class StringSource implements Source {
      */
     public StringSource(String text) {
         this.text = text;
+        getNextChar(); // move to first char
     }
 
     @Override
