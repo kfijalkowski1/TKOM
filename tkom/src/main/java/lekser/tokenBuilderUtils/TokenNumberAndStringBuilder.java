@@ -3,6 +3,7 @@ package lekser.tokenBuilderUtils;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class TokenNumberAndStringBuilder {
 
@@ -10,37 +11,35 @@ public class TokenNumberAndStringBuilder {
         if (src.getCurrentChar() != '\"') {
             return null;
         }
+        ImmutablePair<Integer, Integer> pos = src.getPossition();
         src.getNextChar(); // consume "
         int counter = 0;
         StringBuilder sb = new StringBuilder();
         while (src.getCurrentChar() != '\"') {
             counter++;
-//            if (src.getCurrentChar() == '\\') {
-//                sb.append('\\');
-//            }
             sb.append(src.getCurrentChar());
             src.getNextChar();
             if (counter > 200) {
-                throw new RuntimeException(); //make it better
+                throw new RuntimeException(); //TODO make it better
             }
         }
         src.getNextChar(); //consume "
-        return new Token(TokenType.STRING_VALUE, src.getPossition(), sb.toString());
+        return new Token(TokenType.STRING_VALUE, pos, sb.toString());
     }
     public static Token buildNumber(Source src)  {
         if (!Character.isDigit(src.getCurrentChar())) {
             return null;
         }
+        ImmutablePair<Integer, Integer> pos = src.getPossition();
         StringBuilder sB = new StringBuilder();
-
 
         if (src.getCurrentChar() == '0') {
             char nextChar = src.getNextChar();
             if (nextChar == '.') {
                 sB = getFloatDecimal(src, sB);
-                return new Token(TokenType.FLT_NUMBER, src.getPossition(), Float.parseFloat(sB.toString()));
+                return new Token(TokenType.FLT_NUMBER, pos, Float.parseFloat(sB.toString()));
             }
-            return new Token(TokenType.INT_NUMBER, src.getPossition(), 0);
+            return new Token(TokenType.INT_NUMBER, pos, 0);
         }
         while (Character.isDigit(src.getCurrentChar())) {
             sB.append(src.getCurrentChar());
@@ -49,11 +48,10 @@ public class TokenNumberAndStringBuilder {
         }
         if (src.getCurrentChar() == '.') {
             sB = getFloatDecimal(src, sB);
-            return new Token(TokenType.FLT_NUMBER, src.getPossition(), Float.parseFloat(sB.toString()));
+            return new Token(TokenType.FLT_NUMBER, pos, Float.parseFloat(sB.toString()));
         }
 
-        int value = Integer.parseInt(sB.toString());
-        return new Token(TokenType.INT_NUMBER, src.getPossition(), value);
+        return new Token(TokenType.INT_NUMBER, pos, Integer.parseInt(sB.toString()));
 
 
     }
@@ -75,7 +73,7 @@ public class TokenNumberAndStringBuilder {
         int valLong = Integer.parseInt(number.substring(0, number.length() - 1)); // check number 10 times smaller
         int valShort = Integer.parseInt(number.substring(number.length() - 1)); // check least important number
         if (valLong > 214748364 && valShort > 7) {
-            throw new RuntimeException("aa"); // TODO change to custom exception
+            throw new RuntimeException("aa"); // TODO change to custom exception and change rundom number
         }
     }
 }

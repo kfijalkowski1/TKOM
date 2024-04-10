@@ -19,8 +19,11 @@ public enum TokenType {
     WHILE_KEYWORD,
     IF_KEYWORD,
     ELIF_KEYWORD,
+    AND_KEYWORD,
+    OR_KEYWORD,
+    NOT_KEYWORD,
     RETURN_KEYWORD,
-    VARIABLE_NAME,
+    NAME,
     PLUS_OP,
     MINUS_OP,
     MULTIPLE_OP,
@@ -44,5 +47,6 @@ public enum TokenType {
     REFERENCE_OP,
     DOT_OP,
     NEW_LINE,
+    COMMENT,
 
 }

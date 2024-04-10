@@ -2,23 +2,23 @@ package inputHandle;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-public class Possition {
-    private Integer row = 1;
+public class Position {
+    private Integer column = 0;
     private Integer line = -1;
 
 
-    public Possition(boolean hasLines) {
+    public Position(boolean hasLines) {
         if (hasLines) {
             line = 1;
         }
     }
 
     public void incrementRow() {
-        row++;
+        column++;
     }
 
     public void incrementLine() {
-        row = 1;
+        column = 0;
         line++;
     }
 
@@ -26,7 +26,7 @@ public class Possition {
      * @return pair of current line and current row in
      */
     public ImmutablePair<Integer, Integer> getCurrentPossition() {
-        return new ImmutablePair<>(row, line);
+        return new ImmutablePair<>(column, line);
 
     }
 

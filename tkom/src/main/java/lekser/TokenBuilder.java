@@ -3,6 +3,7 @@ package lekser;
 import inputHandle.Source;
 import lekser.tokenBuilderUtils.TokenNumberAndStringBuilder;
 import lekser.tokenBuilderUtils.TokenOperatorBuilder;
+import lekser.tokenBuilderUtils.TokenVariableBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,13 +11,13 @@ import java.util.function.Function;
 
 public class TokenBuilder {
     private final Source src;
+    private final List<Function<Source, Token>> tokenBuilders = getBuilderFunctions();
 
     public TokenBuilder(Source source) {
         src = source;
     }
 
     public Token getNextToken() {
-        List<Function<Source, Token>> tokenBuilders = getBuilderFunctions();
         Token result;
 
         while(Character.isWhitespace(src.getCurrentChar())) {
@@ -52,7 +53,8 @@ public class TokenBuilder {
                 TokenOperatorBuilder::closeSoftBrackets,
                 TokenOperatorBuilder::dotOperator,
                 TokenOperatorBuilder::endOfTextOperator,
-                TokenOperatorBuilder::refOperator
+                TokenOperatorBuilder::refOperator,
+                TokenVariableBuilder::buildName
         );
     }
 

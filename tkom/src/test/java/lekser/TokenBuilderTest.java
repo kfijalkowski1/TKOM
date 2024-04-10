@@ -58,7 +58,8 @@ public class TokenBuilderTest {
                 Arguments.of("1.1", 1.1F),
                 Arguments.of("0.1 ", 0.1F),
                 Arguments.of("\n\n\t8.55", 8.55F),
-                Arguments.of("      111.0\t\t\t\n", 111.0F)
+                Arguments.of("      111.0\t\t\t\n", 111.0F),
+                Arguments.of("      1.001\t\t\t\n", 1.001F)
         );
     }
 
@@ -137,7 +138,7 @@ public class TokenBuilderTest {
     @ParameterizedTest
     @MethodSource("differentString")
     @DisplayName("test various strings")
-    void testOperators(String text, String value) {
+    void testString(String text, String value) {
         Source src = new StringSource(text);
         TokenBuilder tb = new TokenBuilder(src);
         Token firstToken = tb.getNextToken();
@@ -149,9 +150,69 @@ public class TokenBuilderTest {
         return Stream.of(
                 Arguments.of("\"ala\"", "ala"),
                 Arguments.of("\"  żółto widzęę\"", "  żółto widzęę"),
-                Arguments.of("\"aa \\n \\t \"", "aa \\n \\t ")
+                Arguments.of("\"aa \\n \\t \"", "aa \\n \\t "),
+                Arguments.of("\"aa \n \t \"", "aa \n \t ")
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("differentKeywords")
+    @DisplayName("test various keywords")
+    void testKeywords(String text, TokenType type) {
+        Source src = new StringSource(text);
+        TokenBuilder tb = new TokenBuilder(src);
+        Token firstToken = tb.getNextToken();
+        Assertions.assertEquals(type, firstToken.getTokenType());
+    }
+
+    private static Stream<Arguments> differentKeywords() {
+        return Stream.of(
+                Arguments.of("int", TokenType.INT_KEYWORD),
+                Arguments.of("flt", TokenType.FLT_KEYWORD),
+                Arguments.of("fun", TokenType.FUN_KEYWORD),
+                Arguments.of("match", TokenType.MATCH_KEYWORD),
+                Arguments.of("str", TokenType.STR_KEYWORD),
+                Arguments.of("bool", TokenType.BOOL_KEYWORD),
+                Arguments.of("struct", TokenType.STRUCT_KEYWORD),
+                Arguments.of("TaggedUnion", TokenType.TaggedUnion_KEYWORD),
+                Arguments.of("print", TokenType.PRINT_KEYWORD),
+                Arguments.of("const", TokenType.CONST_KEYWORD),
+                Arguments.of("while", TokenType.WHILE_KEYWORD),
+                Arguments.of("if", TokenType.IF_KEYWORD),
+                Arguments.of("elif", TokenType.ELIF_KEYWORD),
+                Arguments.of("and", TokenType.AND_KEYWORD),
+                Arguments.of("or", TokenType.OR_KEYWORD),
+                Arguments.of("not", TokenType.NOT_KEYWORD),
+                Arguments.of("return", TokenType.RETURN_KEYWORD),
+                Arguments.of("intint", TokenType.NAME),
+                Arguments.of("fltint", TokenType.NAME),
+                Arguments.of("if while booleandsa", TokenType.IF_KEYWORD, TokenType.WHILE_KEYWORD, TokenType.NAME),
+                Arguments.of("flt int", TokenType.FLT_KEYWORD, TokenType.INT_KEYWORD),
+                Arguments.of("int x = 5", TokenType.INT_KEYWORD, TokenType.NAME, TokenType.EQ_OP, TokenType.INT_KEYWORD)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("positionTests")
+    @DisplayName("test reading of position")
+    void testPositions(String text, Integer column, Integer line) {
+        Source src = new StringSource(text);
+        TokenBuilder tb = new TokenBuilder(src);
+        Token firstToken = tb.getNextToken();
+        Assertions.assertEquals(column, firstToken.getPossition().left);
+        Assertions.assertEquals(line, firstToken.getPossition().right);
+    }
+
+    private static Stream<Arguments> positionTests() {
+        return Stream.of(
+                Arguments.of("int", 1, 1),
+                Arguments.of("\n1", 1, 2),
+                Arguments.of("\n  1.0", 3, 2),
+                Arguments.of("  \nflt", 1, 2),
+                Arguments.of("\n\n\n  +", 3, 4)
+        );
+    }
+
 
     private static void TestLongText(String text, ArrayList<ImmutablePair<TokenType, Object>> values) {
         Source src = new StringSource(text);
@@ -176,5 +237,7 @@ public class TokenBuilderTest {
         }
     }
 
+
+        //TODO test EOT
 
 }

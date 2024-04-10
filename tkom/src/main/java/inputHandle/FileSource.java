@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class FileSource implements Source {
-    private final Possition poss;
+    private final Position poss;
 
     private char currentChar = 0;
     FileReader fileReader;
@@ -15,7 +15,7 @@ public class FileSource implements Source {
 
     public FileSource(String path) throws IOException {
         fileReader = new FileReader(path);
-        poss = new Possition(true);
+        poss = new Position(true);
         getNextChar(); // move to first char
     }
 

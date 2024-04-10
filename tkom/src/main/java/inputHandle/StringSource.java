@@ -2,15 +2,13 @@ package inputHandle;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.io.IOException;
-
 /**
  * mainly for testing and fast source creation
  */
 public class StringSource implements Source {
 
     private String text;
-    private Possition poss = new Possition(true);
+    private Position pos = new Position(true);
     private char currentChar;
     private int currentTextIndex = 0;
 
@@ -31,9 +29,9 @@ public class StringSource implements Source {
         }
         currentChar =  text.charAt(currentTextIndex++);
         if (currentChar == '\n' || currentChar == '\r') { // TODO isnt there a better way?
-            poss.incrementLine();
+            pos.incrementLine();
         } else {
-            poss.incrementRow();
+            pos.incrementRow();
         }
         return currentChar;
     }
@@ -45,6 +43,6 @@ public class StringSource implements Source {
 
     @Override
     public ImmutablePair<Integer, Integer> getPossition() {
-        return poss.getCurrentPossition();
+        return pos.getCurrentPossition();
     }
 }

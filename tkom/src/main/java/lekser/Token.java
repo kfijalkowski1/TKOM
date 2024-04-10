@@ -1,7 +1,8 @@
 package lekser;
 
-import inputHandle.Possition;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import java.util.Objects;
 
 public class Token {
     private final TokenType tokenType;
@@ -23,6 +24,9 @@ public class Token {
     }
 
     public Object getValue() {
+        if (Objects.isNull(value)) {
+            throw new RuntimeException(); // TODO do it better
+        }
         return value;
     }
 

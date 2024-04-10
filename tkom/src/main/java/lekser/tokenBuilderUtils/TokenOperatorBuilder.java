@@ -3,6 +3,7 @@ package lekser.tokenBuilderUtils;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class TokenOperatorBuilder {
 
@@ -70,15 +71,16 @@ public class TokenOperatorBuilder {
         if (src.getCurrentChar() != '+') {
             return null;
         }
+        ImmutablePair<Integer, Integer> pos = src.getPossition();
         if (src.getNextChar() == '+') {
             src.getNextChar(); // consume this token
-            return new Token(TokenType.POST_INCREMENT_OP, src.getPossition());
+            return new Token(TokenType.POST_INCREMENT_OP, pos);
         }
         if (src.getCurrentChar() == '=') {
             src.getNextChar(); // consume this token
-            return new Token(TokenType.INCREMENT_OP, src.getPossition());
+            return new Token(TokenType.INCREMENT_OP, pos);
         }
-        return new Token(TokenType.PLUS_OP, src.getPossition());
+        return new Token(TokenType.PLUS_OP, pos);
     }
 
     private static Token checkTwoPartToken(
@@ -86,18 +88,20 @@ public class TokenOperatorBuilder {
         if (src.getCurrentChar() != firstChar) {
             return null;
         }
+        ImmutablePair<Integer, Integer> pos = src.getPossition();
         if (src.getNextChar() == secondChar) {
             src.getNextChar(); // consume this token
-            return new Token(secondReturn, src.getPossition());
+            return new Token(secondReturn, pos);
         }
-        return new Token(firstReturn, src.getPossition());
+        return new Token(firstReturn, pos);
     }
 
     private static Token checkOnePartToken(Source src, char fChar, TokenType returnType) {
         if (src.getCurrentChar() != fChar) {
             return null;
         }
+        ImmutablePair<Integer, Integer> pos = src.getPossition();
         src.getNextChar(); // consume this token
-        return new Token(returnType, src.getPossition());
+        return new Token(returnType, pos);
     }
 }

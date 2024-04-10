@@ -10,14 +10,11 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Source src = new FileSource("test.sp");
-        TokenBuilder tb = new TokenBuilder(src);
-        Token token = tb.getNextToken();
-        System.out.println("type: " + token.getTokenType() + " value: " + token.getValue().toString());;
-         token = tb.getNextToken();
-        System.out.println("type: " + token.getTokenType() + " value: ");
-         token = tb.getNextToken();
-        System.out.println("type: " + token.getTokenType() + " value: ");
+        StringBuilder sb = new StringBuilder();
+        sb.append('a');
+        sb.append('\n');
+        sb.append('a');
+        System.out.println(sb);
 
     }
 }
