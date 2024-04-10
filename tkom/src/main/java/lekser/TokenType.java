@@ -7,6 +7,7 @@ public enum TokenType {
     UNKNOWN_TOKEN,
     END_OF_TEXT,
     INT_KEYWORD,
+    VOID_KEYWORD,
     FLT_KEYWORD,
     FUN_KEYWORD,
     MATCH_KEYWORD,
@@ -14,7 +15,6 @@ public enum TokenType {
     BOOL_KEYWORD,
     STRUCT_KEYWORD,
     TaggedUnion_KEYWORD,
-    PRINT_KEYWORD,
     CONST_KEYWORD,
     WHILE_KEYWORD,
     IF_KEYWORD,
@@ -46,6 +46,7 @@ public enum TokenType {
     CLOSE_SHARP_BRACKETS_OP,
     REFERENCE_OP,
     DOT_OP,
+    COMA_OP,
     NEW_LINE,
     COMMENT,
 

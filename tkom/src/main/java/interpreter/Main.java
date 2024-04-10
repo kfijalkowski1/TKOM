@@ -3,6 +3,7 @@ package interpreter;
 
 import inputHandle.FileSource;
 import inputHandle.Source;
+import inputHandle.StringSource;
 import lekser.Token;
 import lekser.TokenBuilder;
 
@@ -10,11 +11,9 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        sb.append('a');
-        sb.append('\n');
-        sb.append('a');
-        System.out.println(sb);
+        Source sr = new StringSource("int a = 5");
+        TokenBuilder tb = new TokenBuilder(sr);
+        System.out.println(tb.getNextToken().getTokenType());
 
     }
 }

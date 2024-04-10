@@ -1,5 +1,6 @@
 package lekser;
 
+import lekser.exceptions.NoValueToken;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.Objects;
@@ -23,9 +24,9 @@ public class Token {
         return tokenType;
     }
 
-    public Object getValue() {
+    public Object getValue() throws NoValueToken {
         if (Objects.isNull(value)) {
-            throw new RuntimeException(); // TODO do it better
+            throw new NoValueToken("Token has no value");
         }
         return value;
     }
