@@ -3,6 +3,7 @@ package lekser.tokenBuilderUtils;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
+import lekser.exceptions.IncorrectValueToken;
 import lekser.exceptions.NameTooLongException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -35,7 +36,7 @@ public class TokenVariableBuilder {
             new AbstractMap.SimpleEntry<String, TokenType>("void", TokenType.VOID_KEYWORD)
     );
 
-    public static Token buildName(Source src) throws NameTooLongException {
+    public static Token buildName(Source src) throws NameTooLongException, IncorrectValueToken {
         if (!Character.isLetter(src.getCurrentChar())) {
             return null;
         }

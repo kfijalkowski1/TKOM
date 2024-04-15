@@ -483,7 +483,7 @@ java -jar Speed.jar fileName --recursion-limit=800
 
 ### Ograniczenia wartości zmiennych:
 - Zakres int-a-> (-2147483647, 2147483647)
-- Dokładność float-a -> zakres taki sam jak int, oraz 10 cyfr po przecinku
+- Dokładność float-a -> zakres taki sam jak int, oraz 6 cyfr po przecinku
 - Max długość string-a -> 200 
 
 TODO:

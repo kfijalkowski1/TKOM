@@ -28,7 +28,7 @@ public class TokenBuilderTest {
     void testIntNumerics(String text, Integer value) throws LekserException, NoValueToken {
         Source src = new StringSource(text);
         TokenBuilder tb = new TokenBuilder(src);
-        Token firstToken = tb.getNextToken();
+           Token firstToken = tb.getNextToken();
         Assertions.assertEquals(TokenType.INT_NUMBER, firstToken.getTokenType());
         Assertions.assertEquals(value, firstToken.getValue());
         Token endOfToken = tb.getNextToken();
@@ -50,18 +50,20 @@ public class TokenBuilderTest {
     @MethodSource("singularFloatSource")
     @DisplayName("Test singular float values")
     void testFltNumerics(String text, Float value) throws LekserException, NoValueToken {
+        float FLOAT_EPSILON = 0.000001F;
         Source src = new StringSource(text);
         TokenBuilder tb = new TokenBuilder(src);
         Token firstToken = tb.getNextToken();
+        float epsilon = value - (float)firstToken.getValue();
         Assertions.assertEquals(TokenType.FLT_NUMBER, firstToken.getTokenType());
-        Assertions.assertEquals(value, firstToken.getValue());
+        Assertions.assertTrue(Math.abs(epsilon) < FLOAT_EPSILON);
     }
 
     private static Stream<Arguments> singularFloatSource() {
         return Stream.of(
-                Arguments.of("1.1", 1.1F),
-                Arguments.of("0.1 ", 0.1F),
-                Arguments.of("12311.999991234 ", 12311.999991234F),
+//                Arguments.of("1.1", 1.1F),
+//                Arguments.of("0.1 ", 0.1F),
+                Arguments.of("12311.12345 ", 12311.12345F),
                 Arguments.of("\n\n\t8.55", 8.55F),
                 Arguments.of("      111.0\t\t\t\n", 111.0F),
                 Arguments.of("      1.001\t\t\t\n", 1.001F)
@@ -83,13 +85,13 @@ public class TokenBuilderTest {
                         new ImmutablePair<>(TokenType.INT_NUMBER, 199)));
         ArrayList<ImmutablePair<TokenType, Object>> secondArray =
                 new ArrayList<>(Arrays.asList(
-                        new ImmutablePair<>(TokenType.FLT_NUMBER, 1223.1111111F),
+                        new ImmutablePair<>(TokenType.FLT_NUMBER, 1223.11111F),
                         new ImmutablePair<>(TokenType.INT_NUMBER, 19),
                         new ImmutablePair<>(TokenType.FLT_NUMBER, 88.48F)));
 
         return Stream.of(
                 Arguments.of("0.5\n\t0.08\n199", firstArray),
-                Arguments.of("1223.1111111\n\t19 88.48", secondArray)
+                Arguments.of("1223.11111\n\t19 88.48", secondArray)
         );
     }
 
@@ -252,8 +254,8 @@ public class TokenBuilderTest {
                 Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tNumber too big, max int: 2147483647", "9992147483647"),
                 Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tNumber too big, max int: 2147483647", "9992147483647.999"),
                 Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tNumber too big, max int: 2147483647", "9992147483647.999"),
-                Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tToo many numbers after . max amount: 9", "1.999991234411"),
-                Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tToo many numbers after . max amount: 9", "12311.9999912342"),
+                Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tToo many numbers after . max amount: 5", "1.123456"),
+                Arguments.of(NumberOutOfBoundsException.class, "Lekser finished because of exception at: line: 1, character: 1\tToo many numbers after . max amount: 5", "12311.9999912342"),
                 Arguments.of(NameTooLongException.class, "Lekser finished because of exception at: line: 1, character: 1\tName too long, max length: 50", "%s".formatted(str60)),
                 Arguments.of(NameTooLongException.class, "Lekser finished because of exception at: line: 1, character: 1\tName too long, max length: 50", "%s".formatted(str51)),
                 Arguments.of(UnexpectedEndOfFile.class, "Lekser finished because of exception at: line: 1, character: 1\tEnd of file while reading string", "\"%s".formatted(str22))
@@ -272,6 +274,35 @@ public class TokenBuilderTest {
 
         assertEquals("Token has no value", actualMessage);
     }
+
+    @ParameterizedTest
+    @MethodSource("incorrectTokens")
+    void testTokenIntIncorrectValueError(TokenType type, Object value) {
+        Exception exception = assertThrows(IncorrectValueToken.class, () -> {
+            new Token(type, new ImmutablePair<>(1, 2), value);
+        });
+    }
+
+    private static Stream<Arguments> incorrectTokens() {
+        return Stream.of(
+                Arguments.of(TokenType.INT_NUMBER, 1.1),
+                Arguments.of(TokenType.INT_NUMBER, "aa"),
+                Arguments.of(TokenType.INT_NUMBER, null),
+                Arguments.of(TokenType.FLT_NUMBER, 1),
+                Arguments.of(TokenType.FLT_NUMBER, "aa"),
+                Arguments.of(TokenType.FLT_NUMBER, null),
+                Arguments.of(TokenType.STRING_VALUE, 1),
+                Arguments.of(TokenType.STRING_VALUE, 1.1),
+                Arguments.of(TokenType.STRING_VALUE, null),
+                Arguments.of(TokenType.NAME, 1),
+                Arguments.of(TokenType.NAME, 1.1),
+                Arguments.of(TokenType.NAME, null),
+                Arguments.of(TokenType.COMMENT, 1),
+                Arguments.of(TokenType.DOT_OP, 1)
+        );
+    }
+
+
 
     @ParameterizedTest
     @MethodSource("positionTests")

@@ -3,6 +3,7 @@ package lekser.tokenBuilderUtils;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
+import lekser.exceptions.IncorrectValueToken;
 import lekser.exceptions.NumberOutOfBoundsException;
 import lekser.exceptions.StringTooLongException;
 import lekser.exceptions.UnexpectedEndOfFile;
@@ -12,7 +13,7 @@ import static lekser.tokenBuilderUtils.BuildersUtils.*;
 
 public class TokenNumberAndStringBuilder {
 
-    public static Token stringBuilder(Source src) throws StringTooLongException, UnexpectedEndOfFile {
+    public static Token stringBuilder(Source src) throws StringTooLongException, UnexpectedEndOfFile, IncorrectValueToken {
         if (src.getCurrentChar() != '\"') {
             return null;
         }
@@ -61,55 +62,55 @@ public class TokenNumberAndStringBuilder {
 
     }
 
-    public static Token buildNumber(Source src) throws NumberOutOfBoundsException {
+    public static Token buildNumber(Source src) throws NumberOutOfBoundsException, IncorrectValueToken {
         if (!Character.isDigit(src.getCurrentChar())) {
             return null;
         }
         ImmutablePair<Integer, Integer> pos = src.getPossition();
-        StringBuilder sB = new StringBuilder();
 
         if (src.getCurrentChar() == '0') {
             char nextChar = src.getNextChar();
             if (nextChar == '.') {
-                sB = getFloatDecimal(src, sB, pos);
-                return new Token(TokenType.FLT_NUMBER, pos, Float.parseFloat(sB.toString()));
+                float fltVal = getFloatDecimal(src, 0, pos);
+                return new Token(TokenType.FLT_NUMBER, pos, fltVal);
             }
             return new Token(TokenType.INT_NUMBER, pos, 0);
         }
+        int value = 0;
         while (Character.isDigit(src.getCurrentChar())) {
-            sB.append(src.getCurrentChar());
-            checkIfNumberValid(sB.toString(), pos);
+            int curNum = src.getCurrentChar() - '0';
+            checkIfNumberValid(value, curNum, pos);
             src.getNextChar();
+            value = value * 10 + curNum;
         }
         if (src.getCurrentChar() == '.') {
-            sB = getFloatDecimal(src, sB, pos);
-            return new Token(TokenType.FLT_NUMBER, pos, Float.parseFloat(sB.toString()));
+            float fltVal = getFloatDecimal(src, value, pos);
+            return new Token(TokenType.FLT_NUMBER, pos, fltVal);
         }
 
-        return new Token(TokenType.INT_NUMBER, pos, Integer.parseInt(sB.toString()));
+        return new Token(TokenType.INT_NUMBER, pos, value);
 
 
     }
 
-    private static StringBuilder getFloatDecimal(Source src, StringBuilder sB, ImmutablePair pos) throws NumberOutOfBoundsException {
-        sB.append('.');
+    private static float getFloatDecimal(Source src, Integer curVal, ImmutablePair pos) throws NumberOutOfBoundsException {
         int counter = 0;
+        int value = 0;
         while (Character.isDigit(src.getNextChar()) && counter < FLOAT_ACCURACY) {
-            sB.append(src.getCurrentChar());
+            int curNum = src.getCurrentChar() - '0';
+            value = value * 10 + curNum;
             counter++;
         }
          if (counter == FLOAT_ACCURACY) {
              throw new NumberOutOfBoundsException(pos, "Too many numbers after . max amount: %d".formatted(FLOAT_ACCURACY-1));
          }
-        return sB;
+         return ((float) curVal + (float) value / (float)Math.pow(10, counter));
     }
 
-    private static void checkIfNumberValid(String number, ImmutablePair pos) throws NumberOutOfBoundsException {
-        if (number.length() < 10) {
+    private static void checkIfNumberValid(Integer valLong, Integer valShort, ImmutablePair pos) throws NumberOutOfBoundsException {
+        if (valLong < MAX_INT / 10) {
             return;
         }
-        int valLong = Integer.parseInt(number.substring(0, number.length() - 1)); // check number 10 times smaller
-        int valShort = Integer.parseInt(number.substring(number.length() - 1)); // check least important number
         if (valLong > (MAX_INT / 10) || (valLong == MAX_INT / 10 && valShort > MAX_INT % 10)) {
             throw new NumberOutOfBoundsException(pos, "Number too big, max int: %d".formatted(MAX_INT));
         }
