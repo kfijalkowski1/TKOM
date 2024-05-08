@@ -483,3 +483,9 @@ java -jar Speed.jar fileName --recursion-limit=800
 ### Covrege testów jednostkowych:
 ![[Pasted image 20240410223636.png]]
 
+### Parser
+#### Diagram klas:
+![[parser-tree.png]]
+#### Pokrycie testów:
+![[Pasted image 20240508221945.png]]
+niskie pokrycie wynika między innymi z nie testowania get-erów i set-erów klas
