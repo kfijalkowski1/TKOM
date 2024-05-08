@@ -1,5 +1,6 @@
 package lekser.tokenBuilderUtils;
 
+import inputHandle.Position;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
@@ -7,7 +8,6 @@ import lekser.exceptions.IncorrectValueToken;
 import lekser.exceptions.NumberOutOfBoundsException;
 import lekser.exceptions.StringTooLongException;
 import lekser.exceptions.UnexpectedEndOfFile;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import static lekser.tokenBuilderUtils.BuildersUtils.*;
 
@@ -17,7 +17,7 @@ public class TokenNumberAndStringBuilder {
         if (src.getCurrentChar() != '\"') {
             return null;
         }
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         src.getNextChar(); // consume "
         int counter = 1;
         StringBuilder sb = new StringBuilder();
@@ -66,7 +66,7 @@ public class TokenNumberAndStringBuilder {
         if (!Character.isDigit(src.getCurrentChar())) {
             return null;
         }
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
 
         if (src.getCurrentChar() == '0') {
             char nextChar = src.getNextChar();
@@ -93,7 +93,7 @@ public class TokenNumberAndStringBuilder {
 
     }
 
-    private static float getFloatDecimal(Source src, Integer curVal, ImmutablePair pos) throws NumberOutOfBoundsException {
+    private static float getFloatDecimal(Source src, Integer curVal, Position pos) throws NumberOutOfBoundsException {
         int counter = 0;
         int value = 0;
         while (Character.isDigit(src.getNextChar()) && counter < FLOAT_ACCURACY) {
@@ -107,7 +107,7 @@ public class TokenNumberAndStringBuilder {
          return ((float) curVal + (float) value / (float)Math.pow(10, counter));
     }
 
-    private static void checkIfNumberValid(Integer valLong, Integer valShort, ImmutablePair pos) throws NumberOutOfBoundsException {
+    private static void checkIfNumberValid(Integer valLong, Integer valShort, Position pos) throws NumberOutOfBoundsException {
         if (valLong < MAX_INT / 10) {
             return;
         }

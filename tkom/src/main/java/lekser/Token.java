@@ -1,5 +1,6 @@
 package lekser;
 
+import inputHandle.Position;
 import lekser.exceptions.IncorrectValueToken;
 import lekser.exceptions.NoValueToken;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -11,16 +12,20 @@ import java.util.Objects;
 public class Token {
     private final TokenType tokenType;
     private Object value;
-    private final ImmutablePair<Integer, Integer> possition;
+    private final Position possition;
 
-    public Token(TokenType tokenType, ImmutablePair<Integer, Integer> possition, Object value) throws IncorrectValueToken {
-        checkTokenValue(tokenType, value, possition);
+    public Position getPosition() {
+        return possition;
+    }
+
+    public Token(TokenType tokenType, Position position, Object value) throws IncorrectValueToken {
+        checkTokenValue(tokenType, value, position);
         this.tokenType = tokenType;
-        this.possition = possition;
+        this.possition = position;
         this.value = value;
     }
 
-    private static void checkTokenValue(TokenType tokenType, Object value, ImmutablePair<Integer, Integer> possition) throws IncorrectValueToken {
+    private static void checkTokenValue(TokenType tokenType, Object value, Position possition) throws IncorrectValueToken {
         List<TokenType> stringValueTokens = Arrays.asList(TokenType.STRING_VALUE, TokenType.NAME);
         List<TokenType> numericValueTokens = Arrays.asList(TokenType.INT_NUMBER, TokenType.FLT_NUMBER);
 
@@ -35,7 +40,7 @@ public class Token {
         }
     }
 
-    public Token(TokenType tokenType, ImmutablePair<Integer, Integer> possition) {
+    public Token(TokenType tokenType, Position possition) {
         this.tokenType = tokenType;
         this.possition = possition;
     }
@@ -51,7 +56,7 @@ public class Token {
         return value;
     }
 
-    public ImmutablePair<Integer, Integer> getPossition() {
+    public Position getPossition() {
         return possition;
     }
 }

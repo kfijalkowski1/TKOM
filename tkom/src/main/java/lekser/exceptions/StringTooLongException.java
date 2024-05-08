@@ -1,10 +1,10 @@
 package lekser.exceptions;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import inputHandle.Position;
 
 public class StringTooLongException extends LekserException {
 
-    public StringTooLongException(ImmutablePair<Integer, Integer> pos, String txt) {
+    public StringTooLongException(Position pos, String txt) {
         super(pos, txt);
     }
 }

@@ -12,5 +12,5 @@ public interface Source {
      * @return next character
      */
     public char getCurrentChar();
-    public ImmutablePair<Integer, Integer> getPossition();
+    public Position getPossition();
 }

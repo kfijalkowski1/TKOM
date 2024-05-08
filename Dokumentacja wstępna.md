@@ -265,17 +265,8 @@ c = g + b
 if name == 2:
 	print("a")
 ```
-- IndexError -> specyficzne dla listy
-```
-myList = [0, 1]
-myList.get(4)
-```
-- KeyError -> specyficzne dla dict
-```
-dict = {"key": 1}
-dict.get("keeey")
-```
 - ZeroDevisionError
+
 ```
 int a = 1 / 0
 ```
@@ -386,23 +377,32 @@ structure              = ("struct" | "TaggedUnion"), name, "{, var_declar_l, {va
 function               = "fun", name, "(", {var_declar}, ")", "-", ">", (type | "void"), "{", expresion, {expresion} "}";
 
 expresion              = conditional
+<<<<<<< Updated upstream
                        | variable
                        | function_call
                        | arithmatic_standalone
                        | matchExp
                        | comment
                        | returnExp;
+=======
+                       | variable_init
+                       | name_expression
+                       | matchExp;
+
+
+name_expression         = name,  (variable_assignemt | function_call | arithmatic_standalone | name_variable_init | struct_call)
+>>>>>>> Stashed changes
 
 returnExp              = "return", value;
 
-matchExp               = "match", (name | function_call), "{", matchCase, {matchCase}, "}";
+matchExp               = "match", name, "{", matchCase, {matchCase}, "}";
 matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresion, {expresion}, "}"
 
 conditional            = if_condition
                         | loop_condition;
 if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"]
-loop_condition         = "while", condition, "{", expresion, {expresion} "}" ;
-condition              = "(", and_condition, ["or", and_condition], ")";
+loop_condition         = "while", condition, "{", expresion, {(expresion} "}" ;
+condition              = "(", and_condition, {"or", and_condition}, ")";
 and_condition          = check, {"and", check};
 check                  = name
                        | test
@@ -412,7 +412,14 @@ tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
 
 function_call          = [name, "."], name "(", [value, {"," value}] ")"; (* also method call *)
 
+<<<<<<< Updated upstream
 variable               = ["gscope"], ["const"], [type], name, "=", value;
+=======
+variable_init          = ["gscope"], ["const"], type, name, "=", value;
+name_variable_init     = name, "=", value; (*type read as a name*)
+variable_assignemt     = "=", value;
+struct_call            = ".", name, {".", name}, ([ "(" value ")"] | "=" value); (*fist name is in name exp*)
+>>>>>>> Stashed changes
 
 var_declar             = type, name;
 var_declar_l           = ["const"], var_declar;
@@ -487,6 +494,12 @@ java -jar Speed.jar fileName --recursion-limit=800
 - Max długość string-a -> 200 
 
 TODO:
+<<<<<<< Updated upstream
 - testy duże
 ### Covrege testów jednostkowych:
 ![[Pasted image 20240410223636.png]]
+=======
+- uruchomienie testów
+- parsowanie ?expresion - matematyczne i logiczne?
+- implement returnExp i breakEXP
+>>>>>>> Stashed changes

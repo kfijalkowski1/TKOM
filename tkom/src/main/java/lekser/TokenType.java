@@ -6,23 +6,27 @@ public enum TokenType {
     STRING_VALUE,
     UNKNOWN_TOKEN,
     END_OF_TEXT,
-    INT_KEYWORD,
-    VOID_KEYWORD,
-    FLT_KEYWORD,
-    FUN_KEYWORD,
-    MATCH_KEYWORD,
-    STR_KEYWORD,
-    BOOL_KEYWORD,
-    STRUCT_KEYWORD,
-    TaggedUnion_KEYWORD,
-    CONST_KEYWORD,
-    WHILE_KEYWORD,
-    IF_KEYWORD,
-    ELIF_KEYWORD,
-    AND_KEYWORD,
-    OR_KEYWORD,
-    NOT_KEYWORD,
-    RETURN_KEYWORD,
+    INT_KEYWORD("int"),
+    VOID_KEYWORD("void"),
+    FLT_KEYWORD("flt"),
+    FUN_KEYWORD("fun"),
+    MATCH_KEYWORD("match"),
+    STR_KEYWORD("str"),
+    BOOL_KEYWORD("bool"),
+    STRUCT_KEYWORD("struct"),
+    TaggedUnion_KEYWORD("TaggedUnion"),
+    CONST_KEYWORD("const"),
+    GSCOPE_KEYWORD("gscope"),
+    WHILE_KEYWORD("while"),
+    IF_KEYWORD("if"),
+    ELIF_KEYWORD("elif"),
+    AND_KEYWORD("and"),
+    OR_KEYWORD("or"),
+    NOT_KEYWORD("not"),
+    RETURN_KEYWORD("return"),
+    TRUE_KEYWORD("true"),
+    FALSE_KEYWORD("false"),
+    BREAK_KEYWORD("break"),
     NAME,
     PLUS_OP,
     MINUS_OP,
@@ -48,6 +52,21 @@ public enum TokenType {
     DOT_OP,
     COMA_OP,
     NEW_LINE,
-    COMMENT,
+    COMMENT;
+
+    public final String label;
+
+    private TokenType() {
+        this.label = null;
+    }
+
+    private TokenType(String label) {
+        this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return this.label;
+    }
 
 }

@@ -42,7 +42,7 @@ public class StringSource implements Source {
     }
 
     @Override
-    public ImmutablePair<Integer, Integer> getPossition() {
+    public Position getPossition() {
         return pos.getCurrentPossition();
     }
 }

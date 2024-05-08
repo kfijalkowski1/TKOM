@@ -1,5 +1,6 @@
 package lekser.tokenBuilderUtils;
 
+import inputHandle.Position;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
@@ -44,7 +45,7 @@ public class TokenOperatorBuilder {
     }
 
     public static Token plusBuilder(Source src) {
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         if (src.getNextChar() == '+') {
             src.getNextChar(); // consume this token
             return new Token(TokenType.POST_INCREMENT_OP, pos);
@@ -58,7 +59,7 @@ public class TokenOperatorBuilder {
 
     private static Token checkTwoPartToken(
             Source src, char firstChar, char secondChar, TokenType firstReturn, TokenType secondReturn) {
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         if (src.getNextChar() == secondChar) {
             src.getNextChar(); // consume this token
             return new Token(secondReturn, pos);
@@ -67,7 +68,7 @@ public class TokenOperatorBuilder {
     }
 
     private static Token checkOnePartToken(Source src, char fChar, TokenType returnType) {
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         src.getNextChar(); // consume this token
         return new Token(returnType, pos);
     }
