@@ -16,8 +16,7 @@ import java.util.Objects;
 
 import static parser.subParsers.ExpresionParser.parseExpresion;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseVariableDeclaration;
-import static parser.utils.ParserUtils.getListOfVarDecl;
-import static parser.utils.ParserUtils.staticReturnTypes;
+import static parser.utils.ParserUtils.*;
 
 public class FunctionDeclarationParser {
 
@@ -65,7 +64,7 @@ public class FunctionDeclarationParser {
         parser.consumeToken();
 
         // expression, {expresion}
-        List<Expression> expressions = getExpressions(parser, pos, name);
+        List<Expression> expressions = getExpressions(parser, pos, "function %s".formatted(name));
 
         // }
         parser.mustBe(TokenType.CLOSE_SHARP_BRACKETS_OP,
@@ -76,19 +75,7 @@ public class FunctionDeclarationParser {
 
     }
 
-    private static List<Expression> getExpressions(Parser parser, Position pos, String name) throws AnalizerException {
-        List<Expression> expressions = new ArrayList<>();
-        Expression exp = parseExpresion(parser);
-        if (Objects.isNull(exp)) {
-            throw new ParserException(pos, "No expressions in function %s".formatted(name));
-        }
-        expressions.add(exp);
-        // {expression}
-        while (!Objects.isNull(exp = parseExpresion(parser))) {
-            expressions.add(exp);
-        }
-        return expressions;
-    }
+
 
     private static String getReturnType(Parser parser, Position pos) throws LekserException, ParserException {
         String returnType = "";

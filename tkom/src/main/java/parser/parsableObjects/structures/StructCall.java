@@ -50,4 +50,9 @@ public class StructCall extends Expression implements IVisitable {
         StructCall that = (StructCall) o;
         return structName.equals(that.structName) && Objects.equals(parameters, that.parameters);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(structName, parameters);
+    }
 }

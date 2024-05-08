@@ -20,6 +20,7 @@ public enum TokenType {
     WHILE_KEYWORD("while"),
     IF_KEYWORD("if"),
     ELIF_KEYWORD("elif"),
+    ELSE_KEYWORD("else"),
     AND_KEYWORD("and"),
     OR_KEYWORD("or"),
     NOT_KEYWORD("not"),

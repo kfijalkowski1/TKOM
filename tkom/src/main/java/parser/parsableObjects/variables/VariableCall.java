@@ -32,4 +32,9 @@ public class VariableCall extends Variable implements IVisitable {
 
         return name.equals(that.name);
     }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

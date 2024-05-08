@@ -9,11 +9,10 @@ import parser.exceptions.ParserException;
 import parser.parsableObjects.arithmatic.ArithmaticStandalone;
 import parser.parsableObjects.arithmatic.Increment;
 import parser.parsableObjects.arithmatic.PostIncrement;
-import parser.parsableObjects.variables.Value;
-import parser.parsableObjects.variables.Variable;
+import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableCall;
 
-import static parser.subParsers.variableParsers.ValueParser.parseValue;
+import static parser.subParsers.ValueParser.parseValue;
 
 public class IncrementParsers {
 
@@ -44,7 +43,7 @@ public class IncrementParsers {
             return null;
         }
         par.consumeToken();
-        Value value = parseValue(par);
+        Expression value = parseValue(par);
         if (value == null) {
             throw new ParserException(pos, "Missing value after increment operation");
         }

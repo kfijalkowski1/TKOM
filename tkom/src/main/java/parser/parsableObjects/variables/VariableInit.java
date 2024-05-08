@@ -6,15 +6,15 @@ import parser.visitators.IVisitable;
 import parser.visitators.IVisitator;
 
 public class VariableInit extends ConstGlobalVariableDeclaration implements IVisitable {
-    public final Value value;
+    public final Expression value;
 
 
-    public VariableInit(String name, String type, Value value, Boolean isConst, Boolean isGlobal, Position pos) {
+    public VariableInit(String name, String type, Expression value, Boolean isConst, Boolean isGlobal, Position pos) {
         super(name, type, isConst, isGlobal, pos);
         this.value = value;
     }
 
-    public VariableInit(String name, String type, Value value, Boolean isConst, Boolean isGlobal,
+    public VariableInit(String name, String type, Expression value, Boolean isConst, Boolean isGlobal,
                         Position pos, Boolean isReference) {
         super(name, type, isConst, isGlobal, pos, isReference);
         this.value = value;
@@ -33,5 +33,12 @@ public class VariableInit extends ConstGlobalVariableDeclaration implements IVis
         VariableInit that = (VariableInit) o;
         return value.equals(that.value);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + value.hashCode();
+    }
+
+
 
 }

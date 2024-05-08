@@ -3,14 +3,12 @@ package parser.subParsers.variableParsers;
 import exceptions.AnalizerException;
 import inputHandle.Position;
 import lekser.TokenType;
-import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.variables.Value;
 import parser.parsableObjects.variables.VariableAssigment;
 
-import static parser.subParsers.variableParsers.ValueParser.parseValue;
+import static parser.subParsers.ValueParser.parseValue;
 
 public class VariableAssigmentParser {
     /**
@@ -23,7 +21,7 @@ public class VariableAssigmentParser {
             return null;
         }
         par.consumeToken();
-        Value value = parseValue(par);
+        Expression value = parseValue(par);
         if(value == null){
             throw new ParserException(par.getToken().getPosition(), "Missing value in variable assigment");
         }

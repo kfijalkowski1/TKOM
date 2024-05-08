@@ -12,12 +12,21 @@ public abstract class ArithmaticStandalone extends Expression {
         this.variable = variable;
     }
 
-    // implement equals
+    public VariableCall getVariable() {
+        return variable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ArithmaticStandalone)) return false;
         ArithmaticStandalone that = (ArithmaticStandalone) o;
         return variable.equals(that.variable);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return variable.hashCode();
     }
 }

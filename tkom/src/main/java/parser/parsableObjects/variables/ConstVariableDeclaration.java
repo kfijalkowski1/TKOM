@@ -32,4 +32,9 @@ public class ConstVariableDeclaration extends VariableDeclaration implements IVi
         return isConst.equals(that.isConst);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode() + isConst.hashCode();
+    }
+
 }

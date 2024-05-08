@@ -3,19 +3,17 @@ package parser.subParsers.variableParsers;
 import exceptions.AnalizerException;
 import inputHandle.Position;
 import lekser.TokenType;
-import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.structures.StructCall;
 import parser.parsableObjects.structures.StructValueAssigment;
 import parser.parsableObjects.variables.StructInit;
-import parser.parsableObjects.variables.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static parser.subParsers.variableParsers.ValueParser.parseValue;
+import static parser.subParsers.ValueParser.parseValue;
 import static parser.utils.ParserUtils.parseComaValues;
 
 public class StructCallParser {
@@ -39,14 +37,15 @@ public class StructCallParser {
         // parameters
 
         while (par.getToken().getTokenType() == TokenType.DOT_OP) {
+            par.consumeToken();
             parameter = (String) par.mustBe(TokenType.NAME,
-                    new ParserException(par.getToken().getPosition(), "No parapetr in struct call"), true);
+                    new ParserException(par.getToken().getPosition(), "No parameter in struct call"), true);
             par.consumeToken();
             parameters.add(parameter);
         }
         if (par.getToken().getTokenType() == TokenType.ASSIGN_OP) {
             par.consumeToken();
-            Value value = parseValue(par);
+            Expression value = parseValue(par);
             return new StructValueAssigment(new StructCall(structName, parameters, pos), value, pos);
         }
         if (par.getToken().getTokenType() == TokenType.OPEN_SOFT_BRACKETS_OP) {
@@ -54,6 +53,7 @@ public class StructCallParser {
             List<Expression> values = parseComaValues(par, "Struct initialization");
             par.mustBe(TokenType.CLOSE_SOFT_BRACKETS_OP,
                     new ParserException(par.getToken().getPosition(), "No closing bracket in struct initialization"));
+            par.consumeToken();
             return new StructInit(structName, parameters, values, pos);
         }
         return new StructCall(structName, parameters, pos);

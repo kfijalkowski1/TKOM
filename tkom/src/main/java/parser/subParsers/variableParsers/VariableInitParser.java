@@ -8,9 +8,9 @@ import parser.exceptions.ParserException;
 import parser.parsableObjects.arithmatic.ArithmaticStandalone;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.ConstGlobalVariableDeclaration;
-import parser.parsableObjects.variables.Value;
 import parser.parsableObjects.variables.VariableCall;
 import parser.parsableObjects.variables.VariableInit;
+import parser.subParsers.ValueParser;
 
 import static parser.subParsers.mathParser.IncrementParsers.parseAllIncrement;
 import static parser.utils.ParserUtils.buildInTypes;
@@ -39,7 +39,7 @@ public class VariableInitParser {
         par.consumeToken();
 
         // value
-        Value value = ValueParser.parseValue(par);
+        Expression value = ValueParser.parseValue(par);
         if (value == null) {
             throw new parser.exceptions.ParserException(par.getToken().getPosition(), "Missing value in variable declaration");
         }
@@ -108,7 +108,7 @@ public class VariableInitParser {
         par.consumeToken();
 
         // value
-        Value value = ValueParser.parseValue(par);
+        Expression value = ValueParser.parseValue(par);
         if (value == null) {
             throw new ParserException(par.getToken().getPosition(), "Missing value in variable declaration");
         }

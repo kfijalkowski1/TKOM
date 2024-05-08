@@ -3,7 +3,12 @@ package parser.visitators;
 import parser.parsableObjects.*;
 import parser.parsableObjects.arithmatic.Increment;
 import parser.parsableObjects.arithmatic.PostIncrement;
-import parser.parsableObjects.expresions.ArithmeticResult;
+import parser.parsableObjects.conditional.ElIfConditional;
+import parser.parsableObjects.conditional.ElseConditional;
+import parser.parsableObjects.conditional.IfConditional;
+import parser.parsableObjects.conditional.WhileConditional;
+import parser.parsableObjects.conditional.condition.*;
+import parser.parsableObjects.arithmatic.results.ArithmeticResult;
 import parser.parsableObjects.expresions.BreakExpression;
 import parser.parsableObjects.expresions.ReturnExpression;
 import parser.parsableObjects.match.Match;
@@ -53,4 +58,20 @@ public interface IVisitator {
     void visit(BreakExpression breakExpression);
 
     void visit(StructValueAssigment structValueAssigment);
+
+    void visit(IfConditional ifCondition);
+
+    void visit(TestCondition testCondition);
+
+    void visit(ValueCondition valueCondition);
+
+    void visit(OrCondition orCondition);
+
+    void visit(AndCondition andCondition);
+
+    void visit(WhileConditional whileConditional);
+
+    void visit(ElIfConditional elIfConditional);
+
+    void visit(ElseConditional elseConditional);
 }

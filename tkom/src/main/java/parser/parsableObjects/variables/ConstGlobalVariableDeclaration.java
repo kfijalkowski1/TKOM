@@ -33,4 +33,9 @@ public class ConstGlobalVariableDeclaration extends VariableDeclaration implemen
         return name.equals(that.name) && type.equals(that.type) && isConst.equals(that.isConst) && isGlobal.equals(that.isGlobal);
     }
 
+    @Override
+    public int hashCode() {
+        return name.hashCode() + type.hashCode() + isConst.hashCode() + isGlobal.hashCode();
+    }
+
 }

@@ -30,4 +30,9 @@ public class Type {
         Type that = (Type) o;
         return type.equals(that.type) && isReference.equals(that.isReference);
     }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode() + isReference.hashCode();
+    }
 }

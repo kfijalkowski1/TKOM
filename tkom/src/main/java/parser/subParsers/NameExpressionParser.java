@@ -5,7 +5,6 @@ import inputHandle.Position;
 import lekser.TokenType;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.expresions.ArithmeticResult;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableCall;
 

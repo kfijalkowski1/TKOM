@@ -13,8 +13,10 @@ import parser.parsableObjects.variables.ConstVariableDeclaration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-import static parser.subParsers.variableParsers.ValueParser.parseValue;
+import static parser.subParsers.ExpresionParser.parseExpresion;
+import static parser.subParsers.ValueParser.parseValue;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseConstVariableDeclaration;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseVariableDeclaration;
 
@@ -63,6 +65,23 @@ public class ParserUtils {
             values.add(value);
         }
         return values;
+    }
+
+    public static final List<TokenType> testers = List.of(
+            TokenType.LESS_OP, TokenType.LESS_EQ_OP, TokenType.MORE_OP, TokenType.MORE_EQ_OP, TokenType.EQ_OP, TokenType.NOT_EQ_OP);
+
+    public static List<Expression> getExpressions(Parser parser, Position pos, String expressionType) throws AnalizerException {
+        List<Expression> expressions = new ArrayList<>();
+        Expression exp = parseExpresion(parser);
+        if (Objects.isNull(exp)) {
+            throw new ParserException(pos, "No expressions in %s".formatted(expressionType));
+        }
+        expressions.add(exp);
+        // {expression}
+        while (!Objects.isNull(exp = parseExpresion(parser))) {
+            expressions.add(exp);
+        }
+        return expressions;
     }
 
 }

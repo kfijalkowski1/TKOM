@@ -206,6 +206,7 @@ public class TokenBuilderTest {
                 Arguments.of("while", TokenType.WHILE_KEYWORD),
                 Arguments.of("if", TokenType.IF_KEYWORD),
                 Arguments.of("elif", TokenType.ELIF_KEYWORD),
+                Arguments.of("else", TokenType.ELSE_KEYWORD),
                 Arguments.of("and", TokenType.AND_KEYWORD),
                 Arguments.of("or", TokenType.OR_KEYWORD),
                 Arguments.of("not", TokenType.NOT_KEYWORD),

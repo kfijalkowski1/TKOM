@@ -40,4 +40,9 @@ public class Match extends Expression implements IVisitable {
         return cases.equals(that.cases);
     }
 
+    @Override
+    public int hashCode() {
+        return cases.hashCode();
+    }
+
 }

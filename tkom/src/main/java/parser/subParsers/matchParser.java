@@ -51,7 +51,7 @@ public class matchParser {
 
         // }
         par.mustBe(TokenType.CLOSE_SHARP_BRACKETS_OP, new ParserException(par.getToken().getPosition(), "Missing '}' in match expression"));
-
+        par.consumeToken();
         return new Match(name, matchCases, pos);
 
     }

@@ -1,11 +1,6 @@
 package parser.parsableObjects.expresions;
 
-import exceptions.AnalizerException;
 import inputHandle.Position;
-import lekser.TokenType;
-import parser.Parser;
-import parser.exceptions.ParserException;
-import parser.parsableObjects.variables.Value;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitator;
 
@@ -42,5 +37,10 @@ public class FunctionCall extends Expression implements IVisitable {
         if (!(o instanceof FunctionCall)) return false;
         FunctionCall that = (FunctionCall) o;
         return funcName.equals(that.funcName) && args.equals(that.args);
+    }
+
+    @Override
+    public int hashCode() {
+        return funcName.hashCode() + args.hashCode();
     }
 }

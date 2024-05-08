@@ -1,10 +1,8 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.ArithmeticResult;
+import parser.parsableObjects.arithmatic.results.ArithmeticResult;
 import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.expresions.FunctionCall;
-import parser.parsableObjects.Statement;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitator;
 
@@ -74,5 +72,10 @@ public class Value extends Expression implements IVisitable {
         if (!(o instanceof Value)) return false;
         Value that = (Value) o;
         return type.equals(that.type) && value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode() + value.hashCode();
     }
 }

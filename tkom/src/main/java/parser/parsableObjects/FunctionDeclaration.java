@@ -51,6 +51,11 @@ public class FunctionDeclaration extends Statement implements IVisitable {
         return Objects.equals(name, that.name) && Objects.equals(returnType, that.returnType) && Objects.equals(parameters, that.parameters) && Objects.equals(expressions, that.expressions);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, returnType, parameters, expressions);
+    }
+
 
 
 }

@@ -6,10 +6,10 @@ import parser.visitators.IVisitable;
 import parser.visitators.IVisitator;
 
 public class VariableAssigment extends Expression implements IVisitable {
-    Value assignedValue;
+    Expression assignedValue;
     String variableName;
 
-    public VariableAssigment(Value assignedValue, String name, Position pos) {
+    public VariableAssigment(Expression assignedValue, String name, Position pos) {
         super(pos);
         this.assignedValue = assignedValue;
         this.variableName = name;
@@ -26,5 +26,10 @@ public class VariableAssigment extends Expression implements IVisitable {
         if (o == null || getClass() != o.getClass()) return false;
         VariableAssigment that = (VariableAssigment) o;
         return assignedValue.equals(that.assignedValue) && variableName.equals(that.variableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return assignedValue.hashCode() + variableName.hashCode();
     }
 }

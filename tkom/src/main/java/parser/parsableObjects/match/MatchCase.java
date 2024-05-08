@@ -49,4 +49,9 @@ public class MatchCase extends Expression implements IVisitable {
         MatchCase that = (MatchCase) o;
         return taggedUnionName.equals(that.taggedUnionName) && taggedUnionCase.equals(that.taggedUnionCase) && variableName.equals(that.variableName) && expressions.equals(that.expressions);
     }
+
+    @Override
+    public int hashCode() {
+        return taggedUnionName.hashCode() + taggedUnionCase.hashCode() + variableName.hashCode() + expressions.hashCode();
+    }
 }

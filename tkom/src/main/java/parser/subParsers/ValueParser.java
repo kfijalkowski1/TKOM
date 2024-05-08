@@ -1,19 +1,17 @@
-package parser.subParsers.variableParsers;
+package parser.subParsers;
 
 import exceptions.AnalizerException;
-import inputHandle.Position;
 import lekser.TokenType;
 import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.arithmatic.ArithmaticStandalone;
-import parser.parsableObjects.expresions.ArithmeticResult;
+import parser.parsableObjects.arithmatic.results.ArithmeticResult;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.Value;
 import parser.parsableObjects.variables.VariableCall;
 
-import static parser.parsableObjects.expresions.ArithmeticResult.parseArithmeticResult;
 import static parser.subParsers.NameExpressionParser.parseNameExpression;
+import static parser.subParsers.mathParser.ArithmaticValueParser.parseArithmeticValue;
 
 public class ValueParser {
     /**
@@ -21,27 +19,20 @@ public class ValueParser {
      *
      * @return Value with one of the types: Value, FunctionCall, ArithmeticResult.
      */
-    public static Value parseValue(Parser par) throws AnalizerException {
+    public static Expression parseValue(Parser par) throws AnalizerException {
+        return parseArithmeticValue(par); // if null, return null
+    }
+    public static Expression parseUnpackedValue(Parser par) throws AnalizerException {
         Value literalValue = parseLiteralValue(par);
-        Position pos = par.getToken().getPosition();
         if (literalValue != null) {
             par.consumeToken();
             return literalValue;
         }
         Expression callExpression = parseNameExpression(par, true);
         if (callExpression != null) {
-            return new Value(callExpression, pos);
+            return callExpression;
         }
-        Expression parseRefVariable = parseRefVariable(par);
-        if (parseRefVariable != null) {
-            return new Value(parseRefVariable, pos);
-        }
-        ArithmeticResult arithmeticResult = parseArithmeticResult(par);
-        if (arithmeticResult != null) {
-            return new Value(arithmeticResult, pos);
-        }
-        return null;
-
+        return parseRefVariable(par);
     }
 
     /**
@@ -57,10 +48,6 @@ public class ValueParser {
         String name = (String) par.mustBe(TokenType.NAME,
                 new ParserException(par.getToken().getPosition(), "No name in reference variable"), true);
         par.consumeToken();
-        ArithmeticResult arithmaticStandalone = parseArithmeticResult(par);
-        if (arithmaticStandalone != null) {
-            return arithmaticStandalone;
-        }
         return new VariableCall(name, par.getToken().getPosition());
     }
 

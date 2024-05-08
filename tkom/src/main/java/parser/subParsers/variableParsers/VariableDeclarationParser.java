@@ -39,10 +39,17 @@ public class VariableDeclarationParser {
      * EBNF: var_declar = type, name;
      * */
     public static VariableDeclaration parseVariableDeclaration(Parser parser) throws LekserException, ParserException {
-        if (!buildInTypes.contains(parser.getToken().getTokenType()) && parser.getToken().getTokenType() != TokenType.NAME){
+        if (!buildInTypes.contains(parser.getToken().getTokenType())
+                && parser.getToken().getTokenType() != TokenType.NAME
+                && parser.getToken().getTokenType() != TokenType.REFERENCE_OP){
             return null;
         }
+        boolean isReference = false;
         Position pos = parser.getToken().getPosition();
+        if (parser.getToken().getTokenType() == TokenType.REFERENCE_OP) {
+            isReference = true;
+            parser.consumeToken();
+        }
 
         // type
         String type;
@@ -59,6 +66,6 @@ public class VariableDeclarationParser {
                 new ParserException(pos, "No name in variable declaration"), true);
         parser.consumeToken();
 
-        return new VariableDeclaration(name, type, pos);
+        return new VariableDeclaration(name, type, pos, isReference);
     }
 }

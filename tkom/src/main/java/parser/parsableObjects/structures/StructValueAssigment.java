@@ -8,9 +8,9 @@ import parser.visitators.IVisitator;
 
 public class StructValueAssigment extends Expression implements IVisitable {
     StructCall structCall; // last one (when next is null) is the name of the variable in struct
-    Value assignedValue;
+    Expression assignedValue;
 
-    public StructValueAssigment(StructCall structCall, Value value, Position pos) {
+    public StructValueAssigment(StructCall structCall, Expression value, Position pos) {
         super(pos);
         this.structCall = structCall;
         this.assignedValue = value;
@@ -29,5 +29,10 @@ public class StructValueAssigment extends Expression implements IVisitable {
         if (!(o instanceof StructValueAssigment)) return false;
         StructValueAssigment that = (StructValueAssigment) o;
         return structCall.equals(that.structCall) && assignedValue.equals(that.assignedValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return structCall.hashCode() + assignedValue.hashCode();
     }
 }

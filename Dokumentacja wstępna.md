@@ -33,8 +33,8 @@
 	- umożliwiają na utworzenie własnej struktury z atrybutami o podanych typach
 ```
 struct Box {
-	str name
-	const str color
+	str name,
+	const str color,
 	int height
 }
 
@@ -47,8 +47,8 @@ b.height = 5
 	- programista nie musi obsługiwać wszystkich typów z danego TaggedUnion
 ```
 TaggedUnion Grade {
-	int numeric
-	str decsriptional
+	int numeric,
+	str decsriptional,
 	flt curved
 }
 
@@ -286,28 +286,28 @@ int a = 10**100000
 # Przykładowy kod
 
 struct Point {
-	flt x
+	flt x,
 	flt y
 }
 
 struct Rectangle {
-	Point a
-	Point b
+	Point a,
+	Point b,
 	const str color
 }
 
 struct Circle {
-	Point center
+	Point center,
 	flt radius
 }
 
 TaggedUnion Shape {
-	Circle cir
+	Circle cir,
 	Rectangle rec
 }
 
 fun circleArea(&Circle c) -> flt {
-	return (3.14 * c.radius**)
+	return (3.14 * c.radius**2)
 }
 
 fun rectangleArea(&rectangle r) -> flt {
@@ -323,6 +323,7 @@ fun shapeArea(&Shape s) -> flt {
 			return rectangleArea(value)
 		}
 	}
+}
 
 
 fun runFun() -> void {
@@ -338,7 +339,7 @@ fun runFun() -> void {
 	} elif (cArea < rArea) {
 		print("rec won")
 	} else {
-		print("draw)
+		print("draw")
 	}
 }
 
@@ -372,26 +373,17 @@ statment               = structure
                        | function
                        | expresion;
 
-structure              = ("struct" | "TaggedUnion"), name, "{, var_declar_l, {var_declar_l}, "}";
+structure              = ("struct" | "TaggedUnion"), name, "{", var_declar_l, {",", var_declar_l}, "}";
 
-function               = "fun", name, "(", {var_declar}, ")", "-", ">", (type | "void"), "{", expresion, {expresion} "}";
+function               = "fun", name, "(", [var_declar, {",", var_declar_l}], ")", "-", ">", (type | "void"), "{", (expresion | returnExp), {(expresion | returnExp)} "}";
 
 expresion              = conditional
-<<<<<<< Updated upstream
-                       | variable
-                       | function_call
-                       | arithmatic_standalone
-                       | matchExp
-                       | comment
-                       | returnExp;
-=======
                        | variable_init
                        | name_expression
                        | matchExp;
 
 
 name_expression         = name,  (variable_assignemt | function_call | arithmatic_standalone | name_variable_init | struct_call)
->>>>>>> Stashed changes
 
 returnExp              = "return", value;
 
@@ -400,7 +392,7 @@ matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresi
 
 conditional            = if_condition
                         | loop_condition;
-if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"]
+if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"],
 loop_condition         = "while", condition, "{", expresion, {(expresion} "}" ;
 condition              = "(", and_condition, {"or", and_condition}, ")";
 and_condition          = check, {"and", check};
@@ -410,16 +402,12 @@ check                  = name
 test                   = value, tester, value;
 tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
 
-function_call          = [name, "."], name "(", [value, {"," value}] ")"; (* also method call *)
+function_call          = "(", [value, {"," value}] ")"; (* also method call *)
 
-<<<<<<< Updated upstream
-variable               = ["gscope"], ["const"], [type], name, "=", value;
-=======
 variable_init          = ["gscope"], ["const"], type, name, "=", value;
 name_variable_init     = name, "=", value; (*type read as a name*)
 variable_assignemt     = "=", value;
 struct_call            = ".", name, {".", name}, ([ "(" value ")"] | "=" value); (*fist name is in name exp*)
->>>>>>> Stashed changes
 
 var_declar             = type, name;
 var_declar_l           = ["const"], var_declar;
@@ -432,18 +420,18 @@ int                    = non-zero-digit, {digit};
 flt                    = int, ".", digit;
 str                    = "\"[^"]*\"";
 bool                   = "true" | "false";
-value                  = int | flt | str | name | arithmetic_result | function_call;
+value                  = int | flt | str | bool | name | arithmetic_result | function_call;
 customTypeName         = name;
 digit                  = "[0-9]"
 non-zero-digit         = "[1-9]"
 comment                = "#.*$"
 
-arithmatic_standalone  = name, ("++" | ("+=" (name | numeric_value) ))
+arithmatic_standalone  = ("++" | ("+=" (name | numeric_value) ))
 
-arithmetic_result      = arithmetic_2tier, {("+" | "-", ""+=), arithmetic_2tier};
+arithmetic_result      = arithmetic_2tier, {("+" | "-"), arithmetic_2tier};
 arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%"), arithmetic_3tier};
-arithmetic_3tier       = arithmetic_prod, ["++", "**"];
-arithmetic_prod        = numeric_value | value | "(" , arithmetic_result, ")";
+arithmetic_3tier       = arithmetic_prod, {"**", arithmetic_prod};
+arithmetic_prod        = value | "(" , arithmetic_result, ")";
 ```
 
 #QUESTION jak wziąść pod uwagę komentarze na końcu lini
@@ -492,14 +480,11 @@ java -jar Speed.jar fileName --recursion-limit=800
 - Zakres int-a-> (-2147483647, 2147483647)
 - Dokładność float-a -> zakres taki sam jak int, oraz 6 cyfr po przecinku
 - Max długość string-a -> 200 
-
-TODO:
-<<<<<<< Updated upstream
-- testy duże
 ### Covrege testów jednostkowych:
 ![[Pasted image 20240410223636.png]]
-=======
+
+TODO:
 - uruchomienie testów
 - parsowanie ?expresion - matematyczne i logiczne?
 - implement returnExp i breakEXP
->>>>>>> Stashed changes
+- sprawdzić jak się ma +=

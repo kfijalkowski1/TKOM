@@ -34,6 +34,11 @@ public abstract class Structure extends Statement implements IVisitable {
                 Objects.equals(name, structure.name);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(variablesDecl, name);
+    }
+
 
 
 }

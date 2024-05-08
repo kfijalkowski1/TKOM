@@ -30,4 +30,9 @@ public class StructInit extends StructCall implements IVisitable {
         StructInit that = (StructInit) o;
         return initValue.equals(that.initValue);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + initValue.hashCode();
+    }
 }

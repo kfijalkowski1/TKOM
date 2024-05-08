@@ -35,4 +35,9 @@ public class VariableDeclaration extends Variable implements IVisitable {
         VariableDeclaration that = (VariableDeclaration) o;
         return name.equals(that.name) && type.equals(that.type);
     }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode() + type.hashCode();
+    }
 }

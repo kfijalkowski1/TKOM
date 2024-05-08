@@ -3,6 +3,7 @@ package parser.subParsers;
 import exceptions.AnalizerException;
 import lekser.TokenType;
 import parser.Parser;
+import parser.exceptions.ParserException;
 import parser.parsableObjects.FunctionDeclaration;
 import parser.parsableObjects.Statement;
 import parser.parsableObjects.expresions.Expression;
@@ -24,9 +25,12 @@ public class StatementParser {
      * @return Statement with on of the types: Structure, Function, Expresion.
      */
     public static Statement parseStatement(Parser par) throws AnalizerException {
-//        if (par.getToken().getTokenType() == TokenType.END_OF_TEXT) {
-//            return null;
-//        }
+        if (par.getToken().getTokenType() == TokenType.END_OF_TEXT) {
+            return null;
+        }
+        if (par.getToken().getTokenType() == TokenType.UNKNOWN_TOKEN) {
+            throw new ParserException(par.getToken().getPosition(), "Unknown token");
+        }
         Structure structure = parseStructure(par);
         if (!Objects.isNull(structure)) {
             return structure;
@@ -39,7 +43,11 @@ public class StatementParser {
         if (!Objects.isNull(expression)) {
             return expression;
         }
+        if (!Objects.isNull(par.getToken())) {
+            throw new ParserException(par.getToken().getPosition(), "Unknown sequence of tokens.");
+        }
         return null;
+
     }
 
 }

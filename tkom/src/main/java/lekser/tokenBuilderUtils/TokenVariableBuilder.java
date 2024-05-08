@@ -31,6 +31,7 @@ public class TokenVariableBuilder {
             new AbstractMap.SimpleEntry<String, TokenType>("while", TokenType.WHILE_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("if", TokenType.IF_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("elif", TokenType.ELIF_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("else", TokenType.ELSE_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("and", TokenType.AND_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("or", TokenType.OR_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("not", TokenType.NOT_KEYWORD),

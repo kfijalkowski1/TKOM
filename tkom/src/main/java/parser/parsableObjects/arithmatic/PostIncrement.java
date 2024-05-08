@@ -22,4 +22,9 @@ public class PostIncrement extends ArithmaticStandalone implements IVisitable {
         if (!super.equals(o)) return false;
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

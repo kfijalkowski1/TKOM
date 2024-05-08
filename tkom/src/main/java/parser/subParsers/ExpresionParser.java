@@ -4,6 +4,7 @@ import exceptions.AnalizerException;
 import lekser.tokenBuilderUtils.ThrowingFunction;
 import parser.Parser;
 import parser.parsableObjects.expresions.Expression;
+import parser.subParsers.condition.conditionalParser;
 import parser.subParsers.variableParsers.VariableDeclarationParser;
 import parser.subParsers.variableParsers.VariableInitParser;
 
@@ -37,7 +38,8 @@ public class ExpresionParser {
                 NameExpressionParser::parseNameExpression,
                 VariableInitParser::parseVariableInit,
                 ExitExpression::parseExitExpression,
-                matchParser::parseMatch
+                matchParser::parseMatch,
+                conditionalParser::parseCondition
         );
     }
 }
