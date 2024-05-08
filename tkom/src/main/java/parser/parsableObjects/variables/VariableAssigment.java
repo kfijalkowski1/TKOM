@@ -15,6 +15,14 @@ public class VariableAssigment extends Expression implements IVisitable {
         this.variableName = name;
     }
 
+    public Expression getAssignedValue() {
+        return assignedValue;
+    }
+
+    public String getVariableName() {
+        return variableName;
+    }
+
     @Override
     public void accept(IVisitator iv) {
         iv.visit(this);

@@ -22,17 +22,29 @@ public class ValueParser {
     public static Expression parseValue(Parser par) throws AnalizerException {
         return parseArithmeticValue(par); // if null, return null
     }
+
     public static Expression parseUnpackedValue(Parser par) throws AnalizerException {
+        boolean isNegative = false;
+        if (par.getToken().getTokenType() == TokenType.MINUS_OP) {
+            par.consumeToken();
+            isNegative = true;
+        }
         Value literalValue = parseLiteralValue(par);
         if (literalValue != null) {
             par.consumeToken();
+            literalValue.setNegative(isNegative);
             return literalValue;
         }
         Expression callExpression = parseNameExpression(par, true);
         if (callExpression != null) {
+            callExpression.setNegative(isNegative);
             return callExpression;
         }
-        return parseRefVariable(par);
+        Expression refVariable =  parseRefVariable(par);
+        if (refVariable != null) {
+            refVariable.setNegative(isNegative);
+        }
+        return refVariable;
     }
 
     /**

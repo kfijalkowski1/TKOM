@@ -44,6 +44,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
 
+
+
     @ParameterizedTest
     @MethodSource("singularExpressions")
     @DisplayName("Test singular creation of single element program parsing")
@@ -676,6 +678,37 @@ class ParserTest {
                                 "\tMissing value in function call",
                         "funkcjaa(a,)")
         );
+    }
+
+    @ParameterizedTest
+    @MethodSource("negativeValues")
+    @DisplayName("Test negative values")
+    void testNegativeValues(String txt, VariableAssigment programElement) throws AnalizerException {
+        Parser parser = new Parser(new TokenBuilder(new StringSource(txt)));
+
+        Program program = parser.parseProgram();
+        assertEquals(programElement, program.getStatements().get(0));
+        assertTrue(((VariableAssigment) program.getStatements().get(0)).getAssignedValue().isNegative());
+    }
+
+    public static Stream<Arguments> negativeValues() {
+        return Stream.of(
+                Arguments.of("a = -1", new VariableAssigment(new Value(1, new Position()), "a", new Position())),
+                Arguments.of("a = -b", new VariableAssigment(new VariableCall("b", new Position()), "a", new Position()))
+        );
+    }
+
+    @Test
+    void otherMinusTest() throws AnalizerException {
+        Parser parser = new Parser(new TokenBuilder(new StringSource("a = 1 - -b")));
+
+        VariableAssigment programElement = new VariableAssigment(
+                new SubtractResult(new Value(1, new Position()),new VariableCall("b", new Position()), new Position() ),
+                "a", new Position());
+
+        Program program = parser.parseProgram();
+        assertEquals(programElement, program.getStatements().get(0));
+        assertTrue(((SubtractResult)((VariableAssigment) program.getStatements().get(0)).getAssignedValue()).getRight().isNegative());
     }
 
 }

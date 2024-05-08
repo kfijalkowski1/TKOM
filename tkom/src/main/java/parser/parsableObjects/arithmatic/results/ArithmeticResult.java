@@ -18,6 +18,13 @@ public abstract class ArithmeticResult extends Expression {
         this.right = right;
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
 
     @Override
     public boolean equals(Object o) {

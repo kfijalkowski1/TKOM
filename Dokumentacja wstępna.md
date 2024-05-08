@@ -420,7 +420,7 @@ int                    = non-zero-digit, {digit};
 flt                    = int, ".", digit;
 str                    = "\"[^"]*\"";
 bool                   = "true" | "false";
-value                  = int | flt | str | bool | name | arithmetic_result | function_call;
+value                  = [-] int | flt | str | bool | name | arithmetic_result | function_call;
 customTypeName         = name;
 digit                  = "[0-9]"
 non-zero-digit         = "[1-9]"
@@ -483,8 +483,3 @@ java -jar Speed.jar fileName --recursion-limit=800
 ### Covrege testów jednostkowych:
 ![[Pasted image 20240410223636.png]]
 
-TODO:
-- uruchomienie testów
-- parsowanie ?expresion - matematyczne i logiczne?
-- implement returnExp i breakEXP
-- sprawdzić jak się ma +=

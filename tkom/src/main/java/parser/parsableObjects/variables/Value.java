@@ -25,6 +25,7 @@ public class Value extends Expression implements IVisitable {
     private ValueType type;
     private Object value;
 
+
     public Value(Integer value, Position pos) {
         super(pos);
         type = ValueType.INT;
