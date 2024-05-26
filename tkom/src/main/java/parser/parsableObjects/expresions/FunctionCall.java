@@ -2,7 +2,7 @@ package parser.parsableObjects.expresions;
 
 import inputHandle.Position;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class FunctionCall extends Expression implements IVisitable {
 
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

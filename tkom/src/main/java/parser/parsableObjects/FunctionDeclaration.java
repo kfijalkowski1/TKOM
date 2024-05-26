@@ -1,11 +1,10 @@
 package parser.parsableObjects;
 
 import inputHandle.Position;
-import parser.parsableObjects.variables.ConstGlobalVariableDeclaration;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableDeclaration;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class FunctionDeclaration extends Statement implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

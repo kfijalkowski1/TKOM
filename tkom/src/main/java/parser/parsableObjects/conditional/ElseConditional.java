@@ -3,7 +3,7 @@ package parser.parsableObjects.conditional;
 import inputHandle.Position;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class ElseConditional extends Conditional implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

@@ -67,6 +67,22 @@ public class conditionalParser {
         Condition condition = ConditionParser.parseCondition(par);
         List<Expression> block = parseBlock(par, "if block");
 
+        List<Conditional> subConditions = getElIfConditions(par, pos);
+
+        getElseConditions(par, subConditions, pos);
+        return new IfConditional(condition, block, subConditions, pos);
+
+    }
+
+    private static void getElseConditions(Parser par, List<Conditional> subConditions, Position pos) throws AnalizerException {
+        if(par.getToken().getTokenType() == TokenType.ELSE_KEYWORD) {
+            par.consumeToken();
+            List<Expression> elseBlock = parseBlock(par, "else block");
+            subConditions.add(new ElseConditional(elseBlock, pos));
+        }
+    }
+
+    private static List<Conditional> getElIfConditions(Parser par, Position pos) throws AnalizerException {
         List<Conditional> subConditions = new ArrayList<>();
         while(par.getToken().getTokenType() == TokenType.ELIF_KEYWORD) {
             par.consumeToken();
@@ -74,14 +90,7 @@ public class conditionalParser {
             List<Expression> subBlock = parseBlock(par, "elif block");
             subConditions.add(new ElIfConditional(subCondition, subBlock, pos));
         }
-
-        if(par.getToken().getTokenType() == TokenType.ELSE_KEYWORD) {
-            par.consumeToken();
-            List<Expression> elseBlock = parseBlock(par, "else block");
-            subConditions.add(new ElseConditional(elseBlock, pos));
-        }
-        return new IfConditional(condition, block, subConditions, pos);
-
+        return subConditions;
     }
 
     private static List<Expression> parseBlock(Parser par, String name) throws AnalizerException {

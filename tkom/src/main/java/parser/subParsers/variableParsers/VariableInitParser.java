@@ -14,6 +14,7 @@ import parser.subParsers.ValueParser;
 
 import static parser.subParsers.mathParser.IncrementParsers.parseAllIncrement;
 import static parser.utils.ParserUtils.buildInTypes;
+import static parser.utils.ParserUtils.getExpValue;
 
 public class VariableInitParser {
 
@@ -39,16 +40,18 @@ public class VariableInitParser {
         par.consumeToken();
 
         // value
-        Expression value = ValueParser.parseValue(par);
-        if (value == null) {
-            throw new parser.exceptions.ParserException(par.getToken().getPosition(), "Missing value in variable declaration");
-        }
+        Expression value = getExpValue(par, "variable declaration");
 
         return new VariableInit(name, type, value, false, false, pos);
     }
 
+
+
     /**
      * EBNF: variable_init   = ["gscope"], ["const"], type, name, "=", value;
+     *
+     * (type has reference in EBNF: type = ["&"], (normalType | customTypeName);
+     *
      * parser variables with not custom type
      */
     public static Expression parseVariableInit(Parser par) throws AnalizerException {
@@ -108,10 +111,7 @@ public class VariableInitParser {
         par.consumeToken();
 
         // value
-        Expression value = ValueParser.parseValue(par);
-        if (value == null) {
-            throw new ParserException(par.getToken().getPosition(), "Missing value in variable declaration");
-        }
+        Expression value = getExpValue(par, "variable declaration");
 
         return new VariableInit(name, type, value, isConst, gscoope, pos, isReference);
     }

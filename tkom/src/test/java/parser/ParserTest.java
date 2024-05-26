@@ -97,8 +97,8 @@ class ParserTest {
                                 "fds", new Position())),
                 Arguments.of("testFunCallName(1, 2)",
                         new FunctionCall("testFunCallName",
-                                List.of(new Value(1,  new Position()),
-                                        new Value(2,  new Position()))
+                                List.of(new Value(1,  TokenType.INT_NUMBER, new Position()),
+                                        new Value(2,  TokenType.INT_NUMBER, new Position()))
                                         , new Position())),
                 Arguments.of("emptyRun()",
                         new FunctionCall("emptyRun",
@@ -112,31 +112,31 @@ class ParserTest {
                         new FunctionCall("testFunCallName",
                                 List.of(new VariableCall("a",  new Position()),
                                         new FunctionCall("secondFuncCall",
-                                                List.of(new Value(1, new Position())), new Position()))
+                                                List.of(new Value(1, TokenType.INT_NUMBER, new Position())), new Position()))
                                 , new Position())),
                 Arguments.of("const int testVarName = 1",
-                        new VariableInit("testVarName", "int", new Value(1,
+                        new VariableInit("testVarName", "int", new Value(1, TokenType.INT_NUMBER,
                                 new Position()), true, false, new Position())),
                 Arguments.of("gscope const flt testVarName = 1.01",
-                        new VariableInit("testVarName", "flt", new Value(1.01f,
+                        new VariableInit("testVarName", "flt", new Value(1.01f, TokenType.FLT_NUMBER,
                                 new Position()), true, true, new Position())),
                 Arguments.of("gscope const flt testVarName = 1.01",
-                        new VariableInit("testVarName", "flt", new Value(1.01f,
+                        new VariableInit("testVarName", "flt", new Value(1.01f, TokenType.FLT_NUMBER,
                                 new Position()), true, true, new Position())),
                 Arguments.of("a = 6",
-                        new VariableAssigment(new Value(6, new Position()), "a", new Position())),
+                        new VariableAssigment(new Value(6, TokenType.INT_NUMBER, new Position()), "a", new Position())),
                 Arguments.of("const &int a = 6",
-                        new VariableInit("a", "int", new Value(6, new Position()), true, false, new Position(), true)),
+                        new VariableInit("a", "int", new Value(6, TokenType.INT_NUMBER, new Position()), true, false, new Position(), true)),
                 Arguments.of("& dsa a = 6",
-                        new VariableInit("a", "dsa", new Value(6, new Position()), false, false, new Position(), true)),
+                        new VariableInit("a", "dsa", new Value(6, TokenType.INT_NUMBER, new Position()), false, false, new Position(), true)),
                 Arguments.of("a++",
                         new PostIncrement(new VariableCall("a", new Position()), new Position())),
                 Arguments.of("&a++",
                         new PostIncrement(new VariableCall("a", new Position(), true), new Position())),
                 Arguments.of("a+=1",
-                        new Increment(new VariableCall("a", new Position()), new Value(1, new Position()), new Position())),
+                        new Increment(new VariableCall("a", new Position()), new Value(1, TokenType.INT_NUMBER, new Position()), new Position())),
                 Arguments.of("point.x = 1",
-                        new StructValueAssigment(new StructCall("point", List.of("x"), new Position()), new Value(1, new Position()), new Position())),
+                        new StructValueAssigment(new StructCall("point", List.of("x"), new Position()), new Value(1, TokenType.INT_NUMBER, new Position()), new Position())),
                 Arguments.of("match s {\n" +
                                 "                  Shape.cir(value) {\n" +
                                 "                   int a\n" +
@@ -231,7 +231,7 @@ class ParserTest {
                 Arguments.of("while(true) { return a }",
                         new WhileConditional(
                                 new ValueCondition(
-                                        new Value(true, new Position()), new Position()),
+                                        new Value(true, TokenType.TRUE_KEYWORD, new Position()), new Position()),
                                 List.of(new ReturnExpression(new VariableCall("a", new Position()), new Position())),
                                 new Position())),
                 Arguments.of("if(true) { return a } " +
@@ -239,11 +239,11 @@ class ParserTest {
                                 "else { return c }",
                         new IfConditional(
                                 new ValueCondition(
-                                        new Value(true, new Position()), new Position()),
+                                        new Value(true, TokenType.TRUE_KEYWORD, new Position()), new Position()),
                                 List.of(new ReturnExpression(new VariableCall("a", new Position()), new Position())),
                                 List.of(new ElIfConditional(
                                         new ValueCondition(
-                                                new Value(false, new Position()), new Position()),
+                                                new Value(false, TokenType.FALSE_KEYWORD, new Position()), new Position()),
                                         List.of(new ReturnExpression(new VariableCall("b", new Position()), new Position())),
                                         new Position()),
                                         new ElseConditional(
@@ -277,58 +277,58 @@ class ParserTest {
                 Arguments.of("a = a * 2",
                         new VariableAssigment(new MultiplyResult(
                                 new VariableCall("a", new Position()),
-                                new Value(2, new Position()),
+                                new Value(2, TokenType.INT_NUMBER, new Position()),
                                 new Position()), "a", new Position())),
                 Arguments.of("a = 3 / 2.5",
                         new VariableAssigment(new DivideResult(
-                                new Value(3, new Position()),
-                                new Value(2.5f, new Position()),
+                                new Value(3, TokenType.INT_NUMBER, new Position()),
+                                new Value(2.5f, TokenType.FLT_NUMBER, new Position()),
                                 new Position()), "a", new Position())),
                 Arguments.of("a = curNum() % 2.5",
                         new VariableAssigment(new ModuloResult(
                                 new FunctionCall("curNum", List.of(), new Position()),
-                                new Value(2.5f, new Position()),
+                                new Value(2.5f, TokenType.FLT_NUMBER, new Position()),
                                 new Position()), "a", new Position())),
                 Arguments.of("a = curNum() % 2.5 + 2",
                         new VariableAssigment(new AddResult(
                                 new ModuloResult(
                                     new FunctionCall("curNum", List.of(), new Position()),
-                                    new Value(2.5f, new Position()),
+                                    new Value(2.5f, TokenType.FLT_NUMBER, new Position()),
                                     new Position()),
-                                new Value(2, new Position()), new Position()),
+                                new Value(2, TokenType.INT_NUMBER, new Position()), new Position()),
                                 "a", new Position())),
                 Arguments.of("a = 2 + 2 * 2",
                         new VariableAssigment(new AddResult(
-                                new Value(2, new Position()),
+                                new Value(2, TokenType.INT_NUMBER, new Position()),
                                 new MultiplyResult(
-                                        new Value(2, new Position()),
-                                        new Value(2, new Position()),
+                                        new Value(2, TokenType.INT_NUMBER, new Position()),
+                                        new Value(2, TokenType.INT_NUMBER, new Position()),
                                         new Position()),
                                 new Position()),
                                 "a", new Position())),
                 Arguments.of("a = (1 + 2**3) * 4",
                         new VariableAssigment(new MultiplyResult(
                                 new AddResult(
-                                        new Value(1, new Position()),
+                                        new Value(1, TokenType.INT_NUMBER, new Position()),
                                         new PowResult(
-                                                new Value(2, new Position()),
-                                                new Value(3, new Position()),
+                                                new Value(2, TokenType.INT_NUMBER, new Position()),
+                                                new Value(3, TokenType.INT_NUMBER, new Position()),
                                                 new Position()),
                                         new Position()),
-                                new Value(4, new Position()),
+                                new Value(4, TokenType.INT_NUMBER, new Position()),
                                 new Position()),
                                 "a", new Position())),
                 Arguments.of("a = ((1 + 2)**3) * 4",
                         new VariableAssigment(new MultiplyResult(
                                 new PowResult(
                                         new AddResult(
-                                                new Value(1, new Position()),
-                                                new Value(2, new Position()),
+                                                new Value(1, TokenType.INT_NUMBER, new Position()),
+                                                new Value(2, TokenType.INT_NUMBER, new Position()),
                                                 new Position()
                                         ),
-                                        new Value(3, new Position()),
+                                        new Value(3, TokenType.INT_NUMBER, new Position()),
                                         new Position()),
-                                new Value(4, new Position()),
+                                new Value(4, TokenType.INT_NUMBER, new Position()),
                                 new Position()),
                                 "a", new Position()))
 
@@ -426,10 +426,10 @@ class ParserTest {
                 new FunctionDeclaration("circleArea",
                         List.of(new VariableDeclaration("c", "Circle", new Position(), true)),
                         List.of(new ReturnExpression(new MultiplyResult(
-                                new Value(3.14f, new Position()),
+                                new Value(3.14f, TokenType.FLT_NUMBER, new Position()),
                                 new PowResult(
                                         new StructCall("c", List.of("radius"), new Position()),
-                                        new Value(2, new Position()),
+                                        new Value(2, TokenType.INT_NUMBER, new Position()),
                                         new Position()),
                                 new Position()), new Position())),
                         "flt", new Position()),
@@ -461,20 +461,20 @@ class ParserTest {
                         List.of(new VariableInit("c", "Circle",
                                         new FunctionCall("Circle",
                                                 List.of(new FunctionCall("Point",
-                                                                List.of(new Value(1.2f, new Position()),
-                                                                        new Value(2.1f, new Position())),
+                                                                List.of(new Value(1.2f, TokenType.FLT_NUMBER, new Position()),
+                                                                        new Value(2.1f, TokenType.FLT_NUMBER, new Position())),
                                                                 new Position()),
-                                                        new Value(5.4f, new Position())), new Position()),
+                                                        new Value(5.4f, TokenType.FLT_NUMBER, new Position())), new Position()),
                                         false, false, new Position()),
                                 new VariableInit("r", "Rectangle",
                                         new FunctionCall("Rectangle",
                                                 List.of(new FunctionCall("Point",
-                                                                List.of(new Value(1.1f, new Position()),
-                                                                        new Value(1.0f, new Position())),
+                                                                List.of(new Value(1.1f, TokenType.FLT_NUMBER, new Position()),
+                                                                        new Value(1.0f, TokenType.FLT_NUMBER, new Position())),
                                                                 new Position()),
                                                         new FunctionCall("Point",
-                                                                List.of(new Value(2.1f, new Position()),
-                                                                        new Value(1.2f, new Position())),
+                                                                List.of(new Value(2.1f, TokenType.FLT_NUMBER, new Position()),
+                                                                        new Value(1.2f, TokenType.FLT_NUMBER, new Position())),
                                                                 new Position())), new Position()),
                                         false, false, new Position()),
                                 new VariableInit("cShape", "Shape",
@@ -502,7 +502,7 @@ class ParserTest {
                                         new Position()),
                                         List.of(
                                                 new FunctionCall("print",
-                                                        List.of(new Value("Circle won", false, new Position())),
+                                                        List.of(new Value("Circle won", TokenType.STRING_VALUE, new Position())),
                                                         new Position())),
                                         List.of(
                                                 new ElIfConditional(new TestCondition(
@@ -512,13 +512,13 @@ class ParserTest {
                                                         new Position()),
                                                         List.of(
                                                                 new FunctionCall("print",
-                                                                        List.of(new Value("rec won", false, new Position())),
+                                                                        List.of(new Value("rec won", TokenType.STRING_VALUE, new Position())),
                                                                         new Position())),
                                                         new Position()),
                                                 new ElseConditional(
                                                         List.of(
                                                                 new FunctionCall("print",
-                                                                        List.of(new Value("draw", false, new Position())),
+                                                                        List.of(new Value("draw", TokenType.STRING_VALUE, new Position())),
                                                                         new Position())),
                                                         new Position())),
                                         new Position())),
@@ -693,7 +693,7 @@ class ParserTest {
 
     public static Stream<Arguments> negativeValues() {
         return Stream.of(
-                Arguments.of("a = -1", new VariableAssigment(new Value(1, new Position()), "a", new Position())),
+                Arguments.of("a = -1", new VariableAssigment(new Value(1, TokenType.INT_NUMBER, new Position()), "a", new Position())),
                 Arguments.of("a = -b", new VariableAssigment(new VariableCall("b", new Position()), "a", new Position()))
         );
     }
@@ -703,7 +703,7 @@ class ParserTest {
         Parser parser = new Parser(new TokenBuilder(new StringSource("a = 1 - -b")));
 
         VariableAssigment programElement = new VariableAssigment(
-                new SubtractResult(new Value(1, new Position()),new VariableCall("b", new Position()), new Position() ),
+                new SubtractResult(new Value(1, TokenType.INT_NUMBER, new Position()),new VariableCall("b", new Position()), new Position() ),
                 "a", new Position());
 
         Program program = parser.parseProgram();

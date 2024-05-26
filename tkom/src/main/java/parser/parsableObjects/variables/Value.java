@@ -1,71 +1,27 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
-import parser.parsableObjects.arithmatic.results.ArithmeticResult;
+import lekser.TokenType;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class Value extends Expression implements IVisitable {
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 
-    private enum ValueType {
-        INT,
-        FLT,
-        STR,
-        BOOL,
-        NAME,
-        EXPRESSION,
-        ARITHMETIC_RESULT}
-
-    private ValueType type;
+    private TokenType type;
     private Object value;
 
 
-    public Value(Integer value, Position pos) {
+    public Value(Object value, TokenType tokType, Position pos) {
         super(pos);
-        type = ValueType.INT;
+        type = tokType;
         this.value = value;
     }
-
-    public Value(Float value, Position pos) {
-        super(pos);
-        type = ValueType.FLT;
-        this.value = value;
-    }
-
-    public Value(Boolean value, Position pos) {
-        super(pos);
-        type = ValueType.BOOL;
-        this.value = value;
-    }
-
-    public Value(ArithmeticResult value, Position pos) {
-        super(pos);
-        type = ValueType.ARITHMETIC_RESULT;
-        this.value = value;
-    }
-
-    public Value(Expression value, Position pos) {
-        super(pos);
-        type = ValueType.EXPRESSION;
-        this.value = value;
-    }
-
-    public Value(String value, Boolean isName, Position pos) {
-        super(pos);
-        if (isName) {
-            type = ValueType.NAME;
-        } else {
-            type = ValueType.STR;
-        }
-        this.value = value;
-    }
-
 
     @Override
     public boolean equals(Object o) {

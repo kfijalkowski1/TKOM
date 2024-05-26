@@ -12,6 +12,7 @@ import parser.parsableObjects.variables.VariableCall;
 
 import static parser.subParsers.NameExpressionParser.parseNameExpression;
 import static parser.subParsers.mathParser.ArithmaticValueParser.parseArithmeticValue;
+import static parser.utils.ParserUtils.buildInValues;
 
 public class ValueParser {
     /**
@@ -64,23 +65,19 @@ public class ValueParser {
     }
 
     /**
-     * literal_value = int | flt | str | bool | name | true | false;
+     * literal_value = int | flt | str | true | false;
      *
      * @return Value with one of the types: Value.
      */
     private static Value parseLiteralValue(Parser par) throws AnalizerException {
-        if (par.getToken().getTokenType() == TokenType.INT_NUMBER) {
-            return new Value((Integer) par.getToken().getValue(), par.getToken().getPosition());
-        } else if (par.getToken().getTokenType() == TokenType.FLT_NUMBER) {
-            return new Value((Float) par.getToken().getValue(), par.getToken().getPosition());
-        } else if (par.getToken().getTokenType() == TokenType.STRING_VALUE) {
-            return new Value((String) par.getToken().getValue(), false, par.getToken().getPosition());
+        if (!buildInValues.contains(par.getToken().getTokenType())) {
+            return null;
         } else if (par.getToken().getTokenType() == TokenType.TRUE_KEYWORD) {
-            return new Value(true, par.getToken().getPosition());
+            return new Value(true, TokenType.TRUE_KEYWORD, par.getToken().getPosition());
         } else if (par.getToken().getTokenType() == TokenType.FALSE_KEYWORD) {
-            return new Value(false, par.getToken().getPosition());
+            return new Value(false, TokenType.FALSE_KEYWORD, par.getToken().getPosition());
         }
-        return null;
+        return new Value(par.getToken().getValue(), par.getToken().getTokenType(), par.getToken().getPosition());
     }
 
 }

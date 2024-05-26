@@ -2,7 +2,7 @@ package parser.parsableObjects.variables;
 
 import inputHandle.Position;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class ConstVariableDeclaration extends VariableDeclaration implements IVisitable {
     private final Boolean isConst;
@@ -18,7 +18,7 @@ public class ConstVariableDeclaration extends VariableDeclaration implements IVi
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

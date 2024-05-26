@@ -9,6 +9,8 @@ import parser.parsableObjects.expresions.BreakExpression;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.expresions.ReturnExpression;
 
+import static parser.utils.ParserUtils.getExpValue;
+
 public class ExitExpression {
 
     /**
@@ -25,10 +27,8 @@ public class ExitExpression {
         }
         Position pos = par.getToken().getPosition();
         par.consumeToken();
-        Expression value = ValueParser.parseValue(par);
-        if (value == null) {
-            throw new parser.exceptions.ParserException(par.getToken().getPosition(), "Missing value in return expression");
-        }
+
+        Expression value = getExpValue(par, "return expression");
 
         return new ReturnExpression(value, pos);
 

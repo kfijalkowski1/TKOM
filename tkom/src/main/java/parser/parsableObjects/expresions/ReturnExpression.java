@@ -1,9 +1,8 @@
 package parser.parsableObjects.expresions;
 
 import inputHandle.Position;
-import parser.parsableObjects.variables.Value;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class ReturnExpression extends Expression implements IVisitable {
     private Expression value;
@@ -14,7 +13,7 @@ public class ReturnExpression extends Expression implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

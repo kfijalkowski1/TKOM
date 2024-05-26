@@ -1,10 +1,7 @@
 package parser.parsableObjects.arithmatic.results;
 
 import inputHandle.Position;
-import lekser.TokenType;
 import parser.parsableObjects.expresions.Expression;
-import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
 
 import java.util.Objects;
 

@@ -1,9 +1,8 @@
 package parser.parsableObjects.conditional.condition;
 
 import inputHandle.Position;
-import parser.exceptions.ParserException;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class OrCondition extends Condition implements IVisitable {
     Condition left;
@@ -18,7 +17,7 @@ public class OrCondition extends Condition implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

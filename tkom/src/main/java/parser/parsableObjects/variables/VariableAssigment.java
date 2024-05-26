@@ -3,7 +3,7 @@ package parser.parsableObjects.variables;
 import inputHandle.Position;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class VariableAssigment extends Expression implements IVisitable {
     Expression assignedValue;
@@ -24,7 +24,7 @@ public class VariableAssigment extends Expression implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

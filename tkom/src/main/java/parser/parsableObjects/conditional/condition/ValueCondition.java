@@ -4,7 +4,7 @@ import inputHandle.Position;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class ValueCondition extends Condition implements IVisitable {
     Expression value;
@@ -17,7 +17,7 @@ public class ValueCondition extends Condition implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

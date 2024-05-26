@@ -9,6 +9,7 @@ import parser.exceptions.ParserException;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableDeclaration;
 import parser.parsableObjects.variables.ConstVariableDeclaration;
+import parser.subParsers.ValueParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,9 @@ public class ParserUtils {
 
     public final static List<TokenType> buildInTypes = Arrays.asList(TokenType.INT_KEYWORD, TokenType.FLT_KEYWORD,
             TokenType.STR_KEYWORD, TokenType.BOOL_KEYWORD);
+
+    public final static List<TokenType> buildInValues = Arrays.asList(TokenType.INT_NUMBER, TokenType.FLT_NUMBER,
+            TokenType.STRING_VALUE, TokenType.TRUE_KEYWORD, TokenType.FALSE_KEYWORD);
 
     public final static List<TokenType> staticReturnTypes = Arrays.asList(TokenType.INT_KEYWORD, TokenType.FLT_KEYWORD,
             TokenType.STR_KEYWORD, TokenType.BOOL_KEYWORD, TokenType.VOID_KEYWORD);
@@ -82,6 +86,14 @@ public class ParserUtils {
             expressions.add(exp);
         }
         return expressions;
+    }
+
+    public static Expression getExpValue(Parser par, String expressionType) throws AnalizerException {
+        Expression value = ValueParser.parseValue(par);
+        if (value == null) {
+            throw new ParserException(par.getToken().getPosition(), "Missing value in %s declaration".formatted(expressionType));
+        }
+        return value;
     }
 
 }

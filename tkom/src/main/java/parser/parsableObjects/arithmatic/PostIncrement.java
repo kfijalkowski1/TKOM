@@ -3,7 +3,7 @@ package parser.parsableObjects.arithmatic;
 import inputHandle.Position;
 import parser.parsableObjects.variables.VariableCall;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class PostIncrement extends ArithmaticStandalone implements IVisitable {
     public PostIncrement(VariableCall variable, Position pos) {
@@ -11,7 +11,7 @@ public class PostIncrement extends ArithmaticStandalone implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

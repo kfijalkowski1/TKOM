@@ -34,12 +34,12 @@ public class ArithmaticValueParser {
      * @return
      */
     public static Expression parseArithmeticValue(Parser par) throws AnalizerException {
-        Expression leftResult = parse2tierAritmatic(par);
+        Expression leftResult = parse2tierArithmetic(par);
         while (arithmeticOperators.contains(par.getToken().getTokenType())) {
             Position pos = par.getToken().getPosition();
             TokenType operator = par.getToken().getTokenType();
             par.consumeToken();
-            Expression rightResult = parse2tierAritmatic(par);
+            Expression rightResult = parse2tierArithmetic(par);
             if (rightResult == null) {
                 throw new ParserException(pos, "No right side of arithmetic expression");
             }
@@ -56,13 +56,13 @@ public class ArithmaticValueParser {
      * @param par
      * @return
      */
-    private static Expression parse2tierAritmatic(Parser par) throws AnalizerException {
-        Expression leftResult = parse3tierAritmatic(par);
+    private static Expression parse2tierArithmetic(Parser par) throws AnalizerException {
+        Expression leftResult = parse3tierArithmetic(par);
         while (arithmetic2tierOperators.contains(par.getToken().getTokenType())) {
             Position pos = par.getToken().getPosition();
             TokenType operator = par.getToken().getTokenType();
             par.consumeToken();
-            Expression rightResult = parse3tierAritmatic(par);
+            Expression rightResult = parse3tierArithmetic(par);
             if (rightResult == null) {
                 throw new ParserException(pos, "No right side of arithmetic expression");
             }
@@ -72,18 +72,18 @@ public class ArithmaticValueParser {
     }
 
     /**
-     * EBNF: arithmetic_3tier       = arithmetic_prod, {"**", arithmetic_prod}
+     * EBNF: arithmetic_3tier       = arithmetic_prod, {"**", arithmetic_prod }
      *
      * @param par
      * @return
      */
-    private static Expression parse3tierAritmatic(Parser par) throws AnalizerException {
-        Expression leftResult = parseProdAritmatic(par);
+    private static Expression parse3tierArithmetic(Parser par) throws AnalizerException {
+        Expression leftResult = parseProdArithmetic(par);
         while (arithmetic3tierOperators.contains(par.getToken().getTokenType())) {
             Position pos = par.getToken().getPosition();
             TokenType operator = par.getToken().getTokenType();
             par.consumeToken();
-            Expression rightResult = parseProdAritmatic(par);
+            Expression rightResult = parseProdArithmetic(par);
             if (rightResult == null) {
                 throw new ParserException(pos, "No right side of arithmetic expression");
             }
@@ -98,7 +98,7 @@ public class ArithmaticValueParser {
      * @param par
      * @return
      */
-    private static Expression parseProdAritmatic(Parser par) throws AnalizerException {
+    private static Expression parseProdArithmetic(Parser par) throws AnalizerException {
         if (par.getToken().getTokenType() == TokenType.OPEN_SOFT_BRACKETS_OP) {
             par.consumeToken();
             Expression result = parseArithmeticValue(par);

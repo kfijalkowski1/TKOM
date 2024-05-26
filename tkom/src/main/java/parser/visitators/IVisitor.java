@@ -21,7 +21,7 @@ import parser.parsableObjects.structures.Struct;
 import parser.parsableObjects.structures.TaggedUnion;
 import parser.parsableObjects.variables.StructInit;
 
-public interface IVisitator {
+public interface IVisitor {
 
     void visit(TaggedUnion taggedUnion);
     void visit(Struct struct);
@@ -29,7 +29,7 @@ public interface IVisitator {
     void visit(VariableDeclaration variableDeclaration);
     void visit(ConstVariableDeclaration constVariableDeclaration);
 
-    void visit(FunctionDeclaration functionDeclararion);
+    void visit(FunctionDeclaration functionDeclaration);
 
     void visit(Value value);
 

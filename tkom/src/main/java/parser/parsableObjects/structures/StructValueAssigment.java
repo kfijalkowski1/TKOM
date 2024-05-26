@@ -2,9 +2,8 @@ package parser.parsableObjects.structures;
 
 import inputHandle.Position;
 import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.variables.Value;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class StructValueAssigment extends Expression implements IVisitable {
     StructCall structCall; // last one (when next is null) is the name of the variable in struct
@@ -18,7 +17,7 @@ public class StructValueAssigment extends Expression implements IVisitable {
 
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

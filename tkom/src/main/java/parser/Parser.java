@@ -40,16 +40,16 @@ public class Parser {
      * @return Program object that contains the list of parsed statements.
     */
     public Program parseProgram() throws AnalizerException {
-        List<Statement> StatementList = new ArrayList<>();
-        Statement statement = parseStatement(this);
-        if (Objects.isNull(statement)) {
+        List<Statement> statementList = new ArrayList<>();
+        Statement statement;
+        while (!Objects.isNull(statement = parseStatement(this))) {
+            statementList.add(statement);
+        }
+        if (statementList.isEmpty()) {
             throw new ParserException(new Position(), "Empty program or no correct statement found.");
         }
-        while (!Objects.isNull(statement)) {
-            StatementList.add(statement);
-            statement = parseStatement(this);
-        }
-        return new Program(StatementList);
+
+        return new Program(statementList);
     }
 
     public void mustBe(TokenType tokenType, ParserException ex) throws ParserException {

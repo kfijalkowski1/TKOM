@@ -1,7 +1,6 @@
 package parser.parsableObjects;
 
 import inputHandle.Position;
-import parser.visitators.IVisitator;
 
 public abstract class Statement {
     private final Position pos;

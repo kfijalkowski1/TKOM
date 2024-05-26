@@ -3,7 +3,7 @@ package parser.parsableObjects.arithmatic.results;
 import inputHandle.Position;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class AddResult extends ArithmeticResult implements IVisitable {
     public AddResult(Expression left, Expression right, Position pos) {
@@ -21,7 +21,7 @@ public class AddResult extends ArithmeticResult implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

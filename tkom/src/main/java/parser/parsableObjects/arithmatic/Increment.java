@@ -4,7 +4,7 @@ import inputHandle.Position;
 import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableCall;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 public class Increment extends ArithmaticStandalone implements IVisitable {
     private Expression value;
@@ -15,7 +15,7 @@ public class Increment extends ArithmaticStandalone implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 

@@ -5,7 +5,7 @@ import lekser.TokenType;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.expresions.Expression;
 import parser.visitators.IVisitable;
-import parser.visitators.IVisitator;
+import parser.visitators.IVisitor;
 
 import static parser.utils.ParserUtils.testers;
 
@@ -27,7 +27,7 @@ public class TestCondition extends Condition implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitator iv) {
+    public void accept(IVisitor iv) {
         iv.visit(this);
     }
 
