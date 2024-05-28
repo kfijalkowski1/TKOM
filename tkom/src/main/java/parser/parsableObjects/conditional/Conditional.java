@@ -1,19 +1,20 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.blocks.Block;
 
 import java.util.List;
 
-public abstract class Conditional extends Expression {
-    private final List<Expression> block;
+public abstract class Conditional extends Block {
+    private final List<Statement> block;
 
-    public Conditional(List<Expression> expressions, Position pos) {
+    public Conditional(List<Statement> blocks, Position pos) {
         super(pos);
-        this.block = expressions;
+        this.block = blocks;
     }
 
-    public List<Expression> getBlock() {
+    public List<Statement> getBlock() {
         return block;
     }
 

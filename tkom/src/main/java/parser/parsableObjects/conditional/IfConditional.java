@@ -1,8 +1,9 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
-import parser.parsableObjects.conditional.condition.Condition;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -12,8 +13,8 @@ public class IfConditional extends ConditionConditional implements IVisitable {
 
     private final List<Conditional> subConditions;
 
-    public IfConditional(Condition condition, List<Expression> expressions, List<Conditional> subConditions, Position pos) {
-        super(condition, expressions, pos);
+    public IfConditional(Expression condition, List<Statement> blocks, List<Conditional> subConditions, Position pos) {
+        super(condition, blocks, pos);
         this.subConditions = subConditions;
     }
 

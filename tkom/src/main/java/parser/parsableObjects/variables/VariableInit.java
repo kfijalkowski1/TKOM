@@ -1,7 +1,9 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import interpreter.exceptions.InterperterException;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -21,7 +23,7 @@ public class VariableInit extends ConstGlobalVariableDeclaration implements IVis
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 
@@ -40,5 +42,7 @@ public class VariableInit extends ConstGlobalVariableDeclaration implements IVis
     }
 
 
-
+    public Object getValue() {
+        return value;
+    }
 }

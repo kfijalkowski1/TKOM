@@ -5,46 +5,31 @@ import lekser.TokenType;
 import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.arithmatic.results.ArithmeticResult;
-import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.variables.Value;
-import parser.parsableObjects.variables.VariableCall;
+import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.expression.LiteralValue;
+import parser.parsableObjects.expression.VariableCall;
 
 import static parser.subParsers.NameExpressionParser.parseNameExpression;
-import static parser.subParsers.mathParser.ArithmaticValueParser.parseArithmeticValue;
 import static parser.utils.ParserUtils.buildInValues;
 
 public class ValueParser {
+
     /**
-     * value  = literal_value | arithmetic_result | function_call | arithmetic_standalone;
+     * value  = literal | name_value;
      *
      * @return Value with one of the types: Value, FunctionCall, ArithmeticResult.
      */
-    public static Expression parseValue(Parser par) throws AnalizerException {
-        return parseArithmeticValue(par); // if null, return null
-    }
-
     public static Expression parseUnpackedValue(Parser par) throws AnalizerException {
-        boolean isNegative = false;
-        if (par.getToken().getTokenType() == TokenType.MINUS_OP) {
-            par.consumeToken();
-            isNegative = true;
-        }
-        Value literalValue = parseLiteralValue(par);
+        LiteralValue literalValue = parseLiteralValue(par);
         if (literalValue != null) {
             par.consumeToken();
-            literalValue.setNegative(isNegative);
             return literalValue;
         }
-        Expression callExpression = parseNameExpression(par, true);
-        if (callExpression != null) {
-            callExpression.setNegative(isNegative);
-            return callExpression;
+        Expression callBlock = parseNameExpression(par);
+        if (callBlock != null) {
+            return callBlock;
         }
         Expression refVariable =  parseRefVariable(par);
-        if (refVariable != null) {
-            refVariable.setNegative(isNegative);
-        }
         return refVariable;
     }
 
@@ -69,15 +54,15 @@ public class ValueParser {
      *
      * @return Value with one of the types: Value.
      */
-    private static Value parseLiteralValue(Parser par) throws AnalizerException {
+    private static LiteralValue parseLiteralValue(Parser par) throws AnalizerException {
         if (!buildInValues.contains(par.getToken().getTokenType())) {
             return null;
         } else if (par.getToken().getTokenType() == TokenType.TRUE_KEYWORD) {
-            return new Value(true, TokenType.TRUE_KEYWORD, par.getToken().getPosition());
+            return new LiteralValue(true, TokenType.TRUE_KEYWORD, par.getToken().getPosition());
         } else if (par.getToken().getTokenType() == TokenType.FALSE_KEYWORD) {
-            return new Value(false, TokenType.FALSE_KEYWORD, par.getToken().getPosition());
+            return new LiteralValue(false, TokenType.FALSE_KEYWORD, par.getToken().getPosition());
         }
-        return new Value(par.getToken().getValue(), par.getToken().getTokenType(), par.getToken().getPosition());
+        return new LiteralValue(par.getToken().getValue(), par.getToken().getTokenType(), par.getToken().getPosition());
     }
 
 }

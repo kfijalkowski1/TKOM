@@ -1,7 +1,8 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class ElseConditional extends Conditional implements IVisitable {
 
-    public ElseConditional(List<Expression> expressions, Position pos) {
-        super(expressions, pos);
+    public ElseConditional(List<Statement> blocks, Position pos) {
+        super(blocks, pos);
     }
 
     @Override

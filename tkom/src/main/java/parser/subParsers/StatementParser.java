@@ -6,25 +6,28 @@ import parser.Parser;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.FunctionDeclaration;
 import parser.parsableObjects.Statement;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.structures.Structure;
 
 import java.util.Objects;
 
-import static parser.subParsers.ExpresionParser.parseExpresion;
+import static parser.subParsers.BlockParser.parseBlock;
 import static parser.subParsers.FunctionDeclarationParser.parseFunctionDeclar;
 import static parser.subParsers.StructureParser.parseStructure;
 
 public class StatementParser {
 
     /**
-     * EBNF: statement = structure
-     *                 | function
-     *                 | expression;
+     * EBNF: statement =   structure
+ *                        | function
+ *                        | block;
      *
-     * @return Statement with on of the types: Structure, Function, Expresion.
+     * @return Statement with on of the types: Structure, Function, Block.
      */
     public static Statement parseStatement(Parser par) throws AnalizerException {
+        if (par.getToken().getTokenType() == TokenType.COMMENT) {
+            par.consumeToken();
+        }
         if (par.getToken().getTokenType() == TokenType.END_OF_TEXT) {
             return null;
         }
@@ -39,7 +42,7 @@ public class StatementParser {
         if (!Objects.isNull(function)) {
             return function;
         }
-        Expression expression = parseExpresion(par);
+        Statement expression = parseBlock(par);
         if (!Objects.isNull(expression)) {
             return expression;
         }

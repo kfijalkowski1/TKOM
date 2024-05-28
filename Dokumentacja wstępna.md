@@ -156,7 +156,7 @@ test() # wypisze klocek
 ```
 fun test() {
 	if (x == 0) {
-		fscope int b = 7
+		gscope int b = 7
 		int a = 6
 		print(a)
 	}
@@ -371,70 +371,73 @@ program                = statment, {statment} ;
 
 statment               = structure
                        | function
-                       | expresion;
+                       | block;
 
 structure              = ("struct" | "TaggedUnion"), name, "{", var_declar_l, {",", var_declar_l}, "}";
 
-function               = "fun", name, "(", [var_declar, {",", var_declar_l}], ")", "-", ">", (type | "void"), "{", (expresion | returnExp), {(expresion | returnExp)} "}";
+function               = "fun", name, "(", [var_declar, {",", var_declar_l}], ")", "-", ">", (type | "void"), "{", block, {block} "}";
 
-expresion              = conditional
+block                  = conditional
                        | variable_init
-                       | name_expression
-                       | matchExp;
+                       | name_block
+                       | match_block
+                       | break_block
+                       | return_block;
 
+name_block             = name,  (variable_assignemt | function_call | arithmatic_standalone | name_variable_init | struct_param_assign);
 
-name_expression         = name,  (variable_assignemt | function_call | arithmatic_standalone | name_variable_init | struct_call)
+return_block           = "return", expression;
 
-returnExp              = "return", value;
+match_block            = "match", name, "{", match_case, {match_case}, "}";
+match_case             = customTypeName, ".", name, "(", name, ")", "{", block, {block}, "}";
 
-matchExp               = "match", name, "{", matchCase, {matchCase}, "}";
-matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresion, {expresion}, "}"
+break_block            = "break";
+return_block           = "return", expression; 
 
 conditional            = if_condition
-                        | loop_condition;
-if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"],
-loop_condition         = "while", condition, "{", expresion, {(expresion} "}" ;
-condition              = "(", and_condition, {"or", and_condition}, ")";
-and_condition          = check, {"and", check};
-check                  = name
-                       | test
-                       | bool ;
-test                   = value, tester, value;
-tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
+                       | loop_condition;
+if_condition           = "if", condition, "{", block, { block } "}", {"elif", condition, "{", block, {block} "}"} ["else", "{", block, {block} "}"],
+loop_condition         = "while", condition, "{", block, { block } "}" ;
+condition              = "(", expression, ")";
 
-function_call          = "(", [value, {"," value}] ")"; (* also method call *)
 
-variable_init          = ["gscope"], ["const"], type, name, "=", value;
-name_variable_init     = name, "=", value; (*type read as a name*)
-variable_assignemt     = "=", value;
-struct_call            = ".", name, {".", name}, ([ "(" value ")"] | "=" value); (*fist name is in name exp*)
+function_call          = "(", [expression, {"," expression}] ")"; (* also method call *)
+
+variable_init          = ["gscope"], ["const"], type, name, "=", expression;
+name_variable_init     = name, "=", expression; (*type read as a name*)
+variable_assignemt     = "=", expression;
+struct_param_assign    = {".", name}, "=" expression;
+
 
 var_declar             = type, name;
 var_declar_l           = ["const"], var_declar;
 
-type                   = ["&"], (normalType | customTypeName);
-normalType             = "int" | "flt" | "str" | "bool";
-name                   = [&], "[a-zA-Z][a-zA-Z0-9]*";
-numeric_value          = int | flt;
-int                    = non-zero-digit, {digit};
-flt                    = int, ".", digit;
-str                    = "\"[^"]*\"";
-bool                   = "true" | "false";
-value                  = [-] int | flt | str | bool | name | arithmetic_result | function_call;
-customTypeName         = name;
-digit                  = "[0-9]"
-non-zero-digit         = "[1-9]"
-comment                = "#.*$"
 
-arithmatic_standalone  = ("++" | ("+=" (name | numeric_value) ))
+expression             = and_condition, ["or", and_condition],
+and_condition          = logical_exp, ["and", logical_exp];
+
+logical_exp            = arithmetic_result , [tester,  arithmetic_result ];
+tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
 
 arithmetic_result      = arithmetic_2tier, {("+" | "-"), arithmetic_2tier};
 arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%"), arithmetic_3tier};
-arithmetic_3tier       = arithmetic_prod, {"**", arithmetic_prod};
-arithmetic_prod        = value | "(" , arithmetic_result, ")";
+arithmetic_3tier       = value, {"**", value};
+
+value                  = ([-] | ["not"] ), (literal | name_value | "(" expression ")");
+
+literal                = int | flt | str | bool | name_value;
+name_value             = name, (variable_call | struct_init_or_call | function_call); (* just name is variable call *)
+struct_init_or_call    = ".", name, {".", name}, [struct_init];
+struct_init            = "(" expression ")";
+
+
+type                   = ["&"], name;
+comment                = "#.*$"
+
+arithmatic_standalone  = ("++" | ("+=" (name | numeric_expression) ));
+
 ```
 
-#QUESTION jak wziąść pod uwagę komentarze na końcu lini
 ### Specyfikacja technologiczna
 
 #### Technologie

@@ -6,7 +6,9 @@ import lekser.TokenType;
 import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.variables.VariableDeclaration;
 import parser.parsableObjects.variables.ConstVariableDeclaration;
 import parser.subParsers.ValueParser;
@@ -16,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static parser.subParsers.ExpresionParser.parseExpresion;
-import static parser.subParsers.ValueParser.parseValue;
+import static parser.subParsers.BlockParser.parseBlock;
+import static parser.subParsers.ExpressionParser.parseExpression;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseConstVariableDeclaration;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseVariableDeclaration;
 
@@ -52,21 +54,21 @@ public class ParserUtils {
         }
     }
 
-    public static List<Expression> parseComaValues(Parser par, String expressionName) throws AnalizerException {
+    public static List<Expression> parseComaExpressions(Parser par, String expressionName) throws AnalizerException {
         List<Expression> values = new ArrayList<>();
-        Expression value = parseValue(par);
-        if (value == null) {
+        Expression expression = parseExpression(par);
+        if (expression == null) {
             return values;
         }
-        values.add(value);
+        values.add(expression);
 
         while (par.getToken().getTokenType() == TokenType.COMA_OP) {
             par.consumeToken();
-            value = parseValue(par);
-            if (value == null) {
+            expression = parseExpression(par);
+            if (expression == null) {
                 throw new ParserException(par.getToken().getPosition(), "Missing value in %s".formatted(expressionName));
             }
-            values.add(value);
+            values.add(expression);
         }
         return values;
     }
@@ -74,22 +76,22 @@ public class ParserUtils {
     public static final List<TokenType> testers = List.of(
             TokenType.LESS_OP, TokenType.LESS_EQ_OP, TokenType.MORE_OP, TokenType.MORE_EQ_OP, TokenType.EQ_OP, TokenType.NOT_EQ_OP);
 
-    public static List<Expression> getExpressions(Parser parser, Position pos, String expressionType) throws AnalizerException {
-        List<Expression> expressions = new ArrayList<>();
-        Expression exp = parseExpresion(parser);
-        if (Objects.isNull(exp)) {
-            throw new ParserException(pos, "No expressions in %s".formatted(expressionType));
+    public static List<Statement> getBlocks(Parser parser, Position pos, String blockType) throws AnalizerException {
+        List<Statement> blocks = new ArrayList<>();
+        Statement block = parseBlock(parser);
+        if (Objects.isNull(block)) {
+            throw new ParserException(pos, "No blocks in %s".formatted(blockType));
         }
-        expressions.add(exp);
-        // {expression}
-        while (!Objects.isNull(exp = parseExpresion(parser))) {
-            expressions.add(exp);
+        blocks.add(block);
+        // {block}
+        while (!Objects.isNull(block = parseBlock(parser))) {
+            blocks.add(block);
         }
-        return expressions;
+        return blocks;
     }
 
     public static Expression getExpValue(Parser par, String expressionType) throws AnalizerException {
-        Expression value = ValueParser.parseValue(par);
+        Expression value = parseExpression(par);
         if (value == null) {
             throw new ParserException(par.getToken().getPosition(), "Missing value in %s declaration".formatted(expressionType));
         }

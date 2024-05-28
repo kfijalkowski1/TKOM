@@ -21,7 +21,7 @@ public class StructureParser {
     /**
      * EBNF: ("struct" | "TaggedUnion"), name, "{, var_declar_l, {var_declar_l}, "}";;
      *
-     * @return Statement with on of the types: Structure, Function, Expresion.
+     * @return Structure object that contains the list of variables declarations.
      */
     public static Structure parseStructure(Parser par) throws LekserException, ParserException {
         if (par.getToken().getTokenType() != TokenType.TaggedUnion_KEYWORD

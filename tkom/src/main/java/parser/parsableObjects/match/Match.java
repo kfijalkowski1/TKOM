@@ -1,13 +1,13 @@
 package parser.parsableObjects.match;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
 import java.util.List;
 
-public class Match extends Expression implements IVisitable {
+public class Match extends Block implements IVisitable {
 
     private String variableName;
     private List<MatchCase> cases;

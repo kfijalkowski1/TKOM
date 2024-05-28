@@ -5,17 +5,17 @@ import inputHandle.Position;
 import lekser.TokenType;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.expresions.FunctionCall;
+import parser.parsableObjects.blocks.FunctionCall;
+import parser.parsableObjects.expression.Expression;
 
 import java.util.List;
 
-import static parser.utils.ParserUtils.parseComaValues;
+import static parser.utils.ParserUtils.parseComaExpressions;
 
 public class ParseFunctionCall {
 
     /**
-     * EBNF: "(", [value, {"," value}] ")";
+     * EBNF: "(", [expression, {"," expression}] ")";
      * @param par parser to parse from
      * @return parsed function call
      */
@@ -33,9 +33,9 @@ public class ParseFunctionCall {
         par.consumeToken();
 
         // [value, {"," value}]
-        List<Expression> values = parseComaValues(par, "function call");
+        List<Expression> values = parseComaExpressions(par, "function call");
 
-        // (
+        // )
         par.mustBe(TokenType.CLOSE_SOFT_BRACKETS_OP, new ParserException(par.getToken().getPosition(), "Missing ')' in function call"), false);
         par.consumeToken();
 

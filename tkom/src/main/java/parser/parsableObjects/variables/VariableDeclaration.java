@@ -1,10 +1,13 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
 public class VariableDeclaration extends Variable implements IVisitable {
+
+
     public final String name;
 
     // treat type as possible custom type or primitive type (don't check if it's valid here)
@@ -22,8 +25,16 @@ public class VariableDeclaration extends Variable implements IVisitable {
         this.type = new Type(type, isReference);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

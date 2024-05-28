@@ -1,6 +1,7 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -17,8 +18,12 @@ public class ConstVariableDeclaration extends VariableDeclaration implements IVi
         this.isConst = isConst;
     }
 
+    public Boolean isConst() {
+        return isConst;
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

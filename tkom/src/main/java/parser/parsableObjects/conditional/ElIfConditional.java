@@ -1,8 +1,9 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
-import parser.parsableObjects.conditional.condition.Condition;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -10,8 +11,8 @@ import java.util.List;
 
 public class ElIfConditional extends ConditionConditional implements IVisitable {
 
-    public ElIfConditional(Condition condition, List<Expression> expressions, Position pos) {
-        super(condition, expressions, pos);
+    public ElIfConditional(Expression condition, List<Statement> blocks, Position pos) {
+        super(condition, blocks, pos);
     }
 
     @Override

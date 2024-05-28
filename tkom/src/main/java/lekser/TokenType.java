@@ -1,9 +1,9 @@
 package lekser;
 
 public enum TokenType {
-    INT_NUMBER,
-    FLT_NUMBER,
-    STRING_VALUE,
+    INT_NUMBER("int"),
+    FLT_NUMBER("flt"),
+    STRING_VALUE("str"),
     UNKNOWN_TOKEN,
     END_OF_TEXT,
     INT_KEYWORD("int"),
@@ -68,6 +68,16 @@ public enum TokenType {
     @Override
     public String toString() {
         return this.label;
+    }
+
+    public String getType() {
+        return switch (this) {
+            case INT_NUMBER -> "int";
+            case FLT_NUMBER -> "flt";
+            case STRING_VALUE -> "str";
+            case TRUE_KEYWORD, FALSE_KEYWORD -> "bool";
+            default -> null;
+        };
     }
 
 }

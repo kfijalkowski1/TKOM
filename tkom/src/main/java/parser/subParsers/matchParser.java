@@ -5,14 +5,14 @@ import inputHandle.Position;
 import lekser.TokenType;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
 import parser.parsableObjects.match.Match;
 import parser.parsableObjects.match.MatchCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static parser.subParsers.ExpresionParser.parseExpresion;
+import static parser.subParsers.BlockParser.parseBlock;
 
 public class matchParser {
     /**
@@ -95,21 +95,21 @@ public class matchParser {
         par.consumeToken();
 
         // expresion
-        List<Expression> expressions = new ArrayList<>();
-        Expression expression = parseExpresion(par);
+        List<Statement> blocks = new ArrayList<>();
+        Statement expression = parseBlock(par);
         if (expression == null) {
             throw new ParserException(par.getToken().getPosition(), "Missing expresion in match case");
         }
         // {expresion}
         while (expression != null) {
-            expressions.add(expression);
-            expression = parseExpresion(par);
+            blocks.add(expression);
+            expression = parseBlock(par);
         }
 
         // }
         par.mustBe(TokenType.CLOSE_SHARP_BRACKETS_OP, new ParserException(par.getToken().getPosition(), "Missing '}' in match case"));
         par.consumeToken();
 
-        return new MatchCase(taggedUnionName, unionTypeName, variableName, expressions, pos);
+        return new MatchCase(taggedUnionName, unionTypeName, variableName, blocks, pos);
     }
 }

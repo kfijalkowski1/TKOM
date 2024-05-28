@@ -1,6 +1,7 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -20,8 +21,16 @@ public class ConstGlobalVariableDeclaration extends VariableDeclaration implemen
         this.isGlobal = isGlobal;
     }
 
+    public Boolean isConst() {
+        return isConst;
+    }
+
+    public Boolean IsGlobal() {
+        return isGlobal;
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

@@ -1,24 +1,25 @@
 package parser.parsableObjects.match;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
 import java.util.List;
 
-public class MatchCase extends Expression implements IVisitable {
+public class MatchCase extends Block implements IVisitable {
     String taggedUnionName;
     String taggedUnionCase;
     String variableName;
-    List<Expression> expressions;
+    List<Statement> blocks;
 
-    public MatchCase(String taggedUnionName, String taggedUnionCase, String variableName, List<Expression> expressions, Position pos) {
+    public MatchCase(String taggedUnionName, String taggedUnionCase, String variableName, List<Statement> blocks, Position pos) {
         super(pos);
         this.taggedUnionName = taggedUnionName;
         this.taggedUnionCase = taggedUnionCase;
         this.variableName = variableName;
-        this.expressions = expressions;
+        this.blocks = blocks;
     }
 
     public String getTaggedUnionName() {
@@ -33,8 +34,8 @@ public class MatchCase extends Expression implements IVisitable {
         return variableName;
     }
 
-    public List<Expression> getExpressions() {
-        return expressions;
+    public List<Statement> getBlocks() {
+        return blocks;
     }
 
     @Override
@@ -47,11 +48,11 @@ public class MatchCase extends Expression implements IVisitable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MatchCase that = (MatchCase) o;
-        return taggedUnionName.equals(that.taggedUnionName) && taggedUnionCase.equals(that.taggedUnionCase) && variableName.equals(that.variableName) && expressions.equals(that.expressions);
+        return taggedUnionName.equals(that.taggedUnionName) && taggedUnionCase.equals(that.taggedUnionCase) && variableName.equals(that.variableName) && blocks.equals(that.blocks);
     }
 
     @Override
     public int hashCode() {
-        return taggedUnionName.hashCode() + taggedUnionCase.hashCode() + variableName.hashCode() + expressions.hashCode();
+        return taggedUnionName.hashCode() + taggedUnionCase.hashCode() + variableName.hashCode() + blocks.hashCode();
     }
 }

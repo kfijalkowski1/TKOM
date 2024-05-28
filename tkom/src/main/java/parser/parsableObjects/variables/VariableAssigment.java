@@ -1,11 +1,12 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
-public class VariableAssigment extends Expression implements IVisitable {
+public class VariableAssigment extends Block implements IVisitable {
     Expression assignedValue;
     String variableName;
 

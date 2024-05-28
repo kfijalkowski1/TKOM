@@ -5,10 +5,11 @@ import inputHandle.Position;
 import lekser.TokenType;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.variables.VariableAssigment;
 
-import static parser.subParsers.ValueParser.parseValue;
+import static parser.subParsers.ExpressionParser.parseExpression;
 
 public class VariableAssigmentParser {
     /**
@@ -21,7 +22,7 @@ public class VariableAssigmentParser {
             return null;
         }
         par.consumeToken();
-        Expression value = parseValue(par);
+        Expression value = parseExpression(par);
         if(value == null){
             throw new ParserException(par.getToken().getPosition(), "Missing value in variable assigment");
         }

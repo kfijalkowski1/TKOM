@@ -21,7 +21,7 @@ public class Parser {
     private Token token;
     TokenBuilder tb;
 
-    Parser(TokenBuilder tb) throws LekserException {
+    public Parser(TokenBuilder tb) throws LekserException {
         this.tb = tb;
         consumeToken();
     }

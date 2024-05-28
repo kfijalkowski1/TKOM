@@ -6,13 +6,14 @@ import lekser.TokenType;
 import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.arithmatic.ArithmaticStandalone;
-import parser.parsableObjects.arithmatic.Increment;
-import parser.parsableObjects.arithmatic.PostIncrement;
-import parser.parsableObjects.expresions.Expression;
-import parser.parsableObjects.variables.VariableCall;
+import parser.parsableObjects.blocks.arithmeticStandalone.ArithmaticStandalone;
+import parser.parsableObjects.blocks.arithmeticStandalone.Increment;
+import parser.parsableObjects.blocks.arithmeticStandalone.PostIncrement;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.expression.VariableCall;
 
-import static parser.subParsers.ValueParser.parseValue;
+import static parser.subParsers.ExpressionParser.parseExpression;
 
 public class IncrementParsers {
 
@@ -43,7 +44,7 @@ public class IncrementParsers {
             return null;
         }
         par.consumeToken();
-        Expression value = parseValue(par);
+        Expression value = parseExpression(par);
         if (value == null) {
             throw new ParserException(pos, "Missing value after increment operation");
         }

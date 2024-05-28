@@ -1,11 +1,13 @@
 package parser.parsableObjects.structures;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.expression.StructCall;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
-public class StructValueAssigment extends Expression implements IVisitable {
+public class StructValueAssigment extends Block implements IVisitable {
     StructCall structCall; // last one (when next is null) is the name of the variable in struct
     Expression assignedValue;
 

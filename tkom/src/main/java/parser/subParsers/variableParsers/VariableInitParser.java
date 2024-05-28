@@ -5,12 +5,12 @@ import inputHandle.Position;
 import lekser.TokenType;
 import parser.Parser;
 import parser.exceptions.ParserException;
-import parser.parsableObjects.arithmatic.ArithmaticStandalone;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.blocks.arithmeticStandalone.ArithmaticStandalone;
+import parser.parsableObjects.blocks.Block;
+import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.variables.ConstGlobalVariableDeclaration;
-import parser.parsableObjects.variables.VariableCall;
+import parser.parsableObjects.expression.VariableCall;
 import parser.parsableObjects.variables.VariableInit;
-import parser.subParsers.ValueParser;
 
 import static parser.subParsers.mathParser.IncrementParsers.parseAllIncrement;
 import static parser.utils.ParserUtils.buildInTypes;
@@ -21,7 +21,7 @@ public class VariableInitParser {
     /**
      * EBNF: variableInit =  name, "=", value;
      * first name is type, second name is variable name
-     * first name is parsed (called only from nameExpressionParser)
+     * first name is parsed (called only from nameBlockParser)
      * Beginning
      *
      * @return Statement with on of the types: Structure, Function, Expresion.
@@ -48,13 +48,13 @@ public class VariableInitParser {
 
 
     /**
-     * EBNF: variable_init   = ["gscope"], ["const"], type, name, "=", value;
+     * EBNF: variable_init   = ["gscope"], ["const"], type, name, "=", expression;
      *
      * (type has reference in EBNF: type = ["&"], (normalType | customTypeName);
      *
      * parser variables with not custom type
      */
-    public static Expression parseVariableInit(Parser par) throws AnalizerException {
+    public static Block parseVariableInit(Parser par) throws AnalizerException {
         if (!buildInTypes.contains(par.getToken().getTokenType())
                 && par.getToken().getTokenType() != TokenType.GSCOPE_KEYWORD
                 && par.getToken().getTokenType() != TokenType.CONST_KEYWORD
@@ -92,8 +92,11 @@ public class VariableInitParser {
                     return arithmaticStandalone;
                 }
             }
-        } else { // build in type
-            type = par.getToken().getTokenType().toString(); // build in type will return not null
+        } else { // should be built in type
+            if (!buildInTypes.contains(par.getToken().getTokenType())) {
+                throw new ParserException(par.getToken().getPosition(), "No type in variable declaration");
+            }
+            type = par.getToken().getTokenType().toString(); // built in type will return not null
             par.consumeToken();
         }
 

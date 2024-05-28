@@ -7,21 +7,21 @@ import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.FunctionDeclaration;
-import parser.parsableObjects.expresions.Expression;
+import parser.parsableObjects.Statement;
+import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.variables.VariableDeclaration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static parser.subParsers.ExpresionParser.parseExpresion;
 import static parser.subParsers.variableParsers.VariableDeclarationParser.parseVariableDeclaration;
 import static parser.utils.ParserUtils.*;
 
 public class FunctionDeclarationParser {
 
     /**
-     * EBNF: = "fun", name, "(", [var_declar, {",", var_declar}], ")", "-", ">", (type | "void"), "{", expresion, {expresion} "}";
+     * EBNF: = "fun", name, "(", [var_declar, {",", var_declar}], ")", "-", ">", (type | "void"), "{", block, {block} "}";
      *
      * @param parser
      * @return new FunctionDeclararion
@@ -63,15 +63,15 @@ public class FunctionDeclarationParser {
                 new ParserException(pos, "No '{' after function return type"));
         parser.consumeToken();
 
-        // expression, {expresion}
-        List<Expression> expressions = getExpressions(parser, pos, "function %s".formatted(name));
+        // block, {block}
+        List<Statement> blocks = getBlocks(parser, pos, "function %s".formatted(name));
 
         // }
         parser.mustBe(TokenType.CLOSE_SHARP_BRACKETS_OP,
-                new ParserException(pos, "No '}' after function expressions"));
+                new ParserException(pos, "No '}' after function blocks"));
         parser.consumeToken();
 
-        return new FunctionDeclaration(name, variables, expressions, returnType, pos);
+        return new FunctionDeclaration(name, variables, blocks, returnType, pos);
 
     }
 

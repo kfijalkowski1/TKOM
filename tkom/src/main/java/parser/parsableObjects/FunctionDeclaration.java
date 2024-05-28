@@ -1,7 +1,6 @@
 package parser.parsableObjects;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
 import parser.parsableObjects.variables.VariableDeclaration;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
@@ -10,18 +9,18 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class FunctionDeclaration extends Statement implements IVisitable {
+public class FunctionDeclaration extends AbsFunctionDeclaration implements IVisitable {
     private final String name;
     private final String returnType;
     private final List<VariableDeclaration> parameters;
-    private final List<Expression> expressions;
+    private final List<Statement> blocks;
 
-    public FunctionDeclaration(String name, List<VariableDeclaration> parameters, List<Expression> expressions,
+    public FunctionDeclaration(String name, List<VariableDeclaration> parameters, List<Statement> blocks,
                                String returnType, Position pos) {
         super(pos);
         this.name = name;
         this.parameters = parameters;
-        this.expressions = expressions;
+        this.blocks = blocks;
         this.returnType = returnType;
     }
 
@@ -33,8 +32,8 @@ public class FunctionDeclaration extends Statement implements IVisitable {
         return parameters;
     }
 
-    public List<Expression> getExpressions() {
-        return expressions;
+    public List<Statement> getBlocks() {
+        return blocks;
     }
 
     @Override
@@ -47,12 +46,12 @@ public class FunctionDeclaration extends Statement implements IVisitable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FunctionDeclaration that = (FunctionDeclaration) o;
-        return Objects.equals(name, that.name) && Objects.equals(returnType, that.returnType) && Objects.equals(parameters, that.parameters) && Objects.equals(expressions, that.expressions);
+        return Objects.equals(name, that.name) && Objects.equals(returnType, that.returnType) && Objects.equals(parameters, that.parameters) && Objects.equals(blocks, that.blocks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, returnType, parameters, expressions);
+        return Objects.hash(name, returnType, parameters, blocks);
     }
 
 

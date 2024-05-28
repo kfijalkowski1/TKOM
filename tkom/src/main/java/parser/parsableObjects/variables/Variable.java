@@ -1,17 +1,12 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
-import parser.parsableObjects.expresions.Expression;
-import parser.visitators.IVisitor;
+import parser.parsableObjects.blocks.Block;
 
-public abstract class Variable extends Expression {
+public abstract class Variable extends Block {
 
     public Variable(Position pos) {
         super(pos);
     }
 
-    @Override
-    public void accept(IVisitor iv) {
-        iv.visit(this);
-    }
 }
