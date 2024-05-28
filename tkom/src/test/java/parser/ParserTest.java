@@ -271,6 +271,24 @@ class ParserTest {
                                 new VariableCall("b", new Position()),
                                 new Position()),
                                 List.of(new ReturnBlock(new VariableCall("a", new Position()), new Position())), List.of(), new Position())),
+                Arguments.of("if(a and not b) { return a }",
+                        new IfConditional(new AndExpression(
+                                new VariableCall("a", new Position()),
+                                new NegatedExpression (new VariableCall("b", new Position())),
+                                new Position()),
+                                List.of(new ReturnBlock(new VariableCall("a", new Position()), new Position())), List.of(), new Position())),
+                Arguments.of("if(a and not b) { return a }",
+                        new IfConditional(new AndExpression(
+                                new VariableCall("a", new Position()),
+                                new NegatedExpression (new VariableCall("b", new Position())),
+                                new Position()),
+                                List.of(new ReturnBlock(new VariableCall("a", new Position()), new Position())), List.of(), new Position())),
+                Arguments.of("if(not (a and b)) { return a }",
+                        new IfConditional(new NegatedExpression (new AndExpression(
+                                new VariableCall("a", new Position()),
+                                new VariableCall("b", new Position()),
+                                new Position())),
+                                List.of(new ReturnBlock(new VariableCall("a", new Position()), new Position())), List.of(), new Position())),
                 Arguments.of("if(a or b and c) { return a }",
                         new IfConditional(new OrExpression(
                                 new VariableCall("a", new Position()),
@@ -738,6 +756,18 @@ class ParserTest {
                         "Parser finished because of exception at: line: 1, character: 12" +
                                 "\tMissing value in function call",
                         "funkcjaa(a,)")
+                ,
+                Arguments.of(
+                        ParserException.class,
+                        "Parser finished because of exception at: line: 1, character: 11" +
+                                "\tCannot negate and make negative at the same time",
+                        "a = - not 5")
+                ,
+                Arguments.of(
+                        ParserException.class,
+                        "Parser finished because of exception at: line: 1, character: 12" +
+                                "\tCannot negate and make negative at the same time",
+                        "b = not -  5")
         );
     }
 
@@ -749,13 +779,12 @@ class ParserTest {
 
         Program program = parser.parseProgram();
         assertEquals(programElement, program.getStatements().get(0));
-        assertTrue(((VariableAssigment) program.getStatements().get(0)).getAssignedValue().isNegative());
     }
 
     public static Stream<Arguments> negativeValues() {
         return Stream.of(
-                Arguments.of("a = -1", new VariableAssigment(new LiteralValue(1, TokenType.INT_NUMBER, new Position()), "a", new Position())),
-                Arguments.of("a = -b", new VariableAssigment(new VariableCall("b", new Position()), "a", new Position()))
+                Arguments.of("a = -1", new VariableAssigment(new NegativeExpression (new LiteralValue(1, TokenType.INT_NUMBER, new Position())), "a", new Position())),
+                Arguments.of("a = -b", new VariableAssigment(new NegativeExpression (new VariableCall("b", new Position())), "a", new Position()))
         );
     }
 
@@ -764,12 +793,11 @@ class ParserTest {
         Parser parser = new Parser(new TokenBuilder(new StringSource("a = 1 - -b")));
 
         VariableAssigment programElement = new VariableAssigment(
-                new SubtractResult(new LiteralValue(1, TokenType.INT_NUMBER, new Position()),new VariableCall("b", new Position()), new Position() ),
+                new SubtractResult(new LiteralValue(1, TokenType.INT_NUMBER, new Position()), new NegativeExpression (new VariableCall("b", new Position())), new Position() ),
                 "a", new Position());
 
         Program program = parser.parseProgram();
         assertEquals(programElement, program.getStatements().get(0));
-        assertTrue(((SubtractResult)((VariableAssigment) program.getStatements().get(0)).getAssignedValue()).getRight().isNegative());
     }
 
 }

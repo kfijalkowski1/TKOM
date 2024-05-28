@@ -7,6 +7,8 @@ import lekser.exceptions.LekserException;
 import parser.Parser;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.expression.Expression;
+import parser.parsableObjects.expression.NegatedExpression;
+import parser.parsableObjects.expression.NegativeExpression;
 import parser.parsableObjects.expression.arithmatic.results.*;
 import parser.subParsers.ValueParser;
 
@@ -105,6 +107,10 @@ public class ArithmeticValueParser {
         boolean isNegative = isNegativeNegated.get(0);
         boolean isNegated = isNegativeNegated.get(1);
 
+        if (isNegated && isNegative) {
+            throw new ParserException(par.getToken().getPosition(), "Cannot negate and make negative at the same time");
+        }
+
         if (par.getToken().getTokenType() == TokenType.OPEN_SOFT_BRACKETS_OP) {
             par.consumeToken();
             Expression result = parseExpression(par);
@@ -113,14 +119,20 @@ public class ArithmeticValueParser {
             }
             par.mustBe(TokenType.CLOSE_SOFT_BRACKETS_OP, new ParserException(par.getToken().getPosition(), "No closing bracket in arithmetic expression"));
             par.consumeToken();
-            result.setNegative(isNegative);
-            result.setNegated(isNegated);
+            if (isNegative) {
+                return new NegativeExpression(result);
+            } else if (isNegated) {
+                return new NegatedExpression(result);
+            }
             return result;
         }
         Expression unpackedValue =  ValueParser.parseUnpackedValue(par);
         if (unpackedValue != null) {
-            unpackedValue.setNegative(isNegative);
-            unpackedValue.setNegated(isNegated);
+            if (isNegative) {
+                return new NegativeExpression(unpackedValue);
+            } else if (isNegated) {
+                return new NegatedExpression(unpackedValue);
+            }
             return unpackedValue;
         }
         return null;

@@ -94,4 +94,8 @@ public interface IVisitor {
     void visit(strFunction strFunction);
 
     void visit(VariableCall variableCall);
+
+    void visit(NegatedExpression negatedExpression);
+
+    void visit(NegativeExpression negativeExpression);
 }
