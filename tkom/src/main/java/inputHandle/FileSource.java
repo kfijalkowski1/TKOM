@@ -37,7 +37,7 @@ public class FileSource implements Source {
     }
 
     @Override
-    public ImmutablePair<Integer, Integer> getPossition() {
+    public Position getPossition() {
         return poss.getCurrentPossition();
     }
 

@@ -1,9 +1,10 @@
 package lekser.exceptions;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import exceptions.AnalizerException;
+import inputHandle.Position;
 
-public class LekserException  extends Exception {
-    public LekserException(ImmutablePair<Integer, Integer> pos, String txt) {
-        super("Lekser finished because of exception at: line: %d, character: %d\t%s".formatted(pos.right, pos.left, txt));
+public class LekserException  extends AnalizerException {
+    public LekserException(Position pos, String txt) {
+        super("Lekser finished because of exception at: line: %d, character: %d\t%s".formatted(pos.getLine(), pos.getcharacter(), txt));
     }
 }

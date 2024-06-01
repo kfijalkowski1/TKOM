@@ -1,10 +1,10 @@
 package lekser.exceptions;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import inputHandle.Position;
 
 public class UnexpectedEndOfFile extends LekserException {
 
-    public UnexpectedEndOfFile(ImmutablePair<Integer, Integer> pos, String txt) {
+    public UnexpectedEndOfFile(Position pos, String txt) {
         super(pos, txt);
     }
 }

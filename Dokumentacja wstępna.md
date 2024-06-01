@@ -33,8 +33,8 @@
 	- umożliwiają na utworzenie własnej struktury z atrybutami o podanych typach
 ```
 struct Box {
-	str name
-	const str color
+	str name,
+	const str color,
 	int height
 }
 
@@ -47,8 +47,8 @@ b.height = 5
 	- programista nie musi obsługiwać wszystkich typów z danego TaggedUnion
 ```
 TaggedUnion Grade {
-	int numeric
-	str decsriptional
+	int numeric,
+	str decsriptional,
 	flt curved
 }
 
@@ -156,7 +156,7 @@ test() # wypisze klocek
 ```
 fun test() {
 	if (x == 0) {
-		fscope int b = 7
+		gscope int b = 7
 		int a = 6
 		print(a)
 	}
@@ -265,17 +265,8 @@ c = g + b
 if name == 2:
 	print("a")
 ```
-- IndexError -> specyficzne dla listy
-```
-myList = [0, 1]
-myList.get(4)
-```
-- KeyError -> specyficzne dla dict
-```
-dict = {"key": 1}
-dict.get("keeey")
-```
 - ZeroDevisionError
+
 ```
 int a = 1 / 0
 ```
@@ -295,28 +286,28 @@ int a = 10**100000
 # Przykładowy kod
 
 struct Point {
-	flt x
+	flt x,
 	flt y
 }
 
 struct Rectangle {
-	Point a
-	Point b
+	Point a,
+	Point b,
 	const str color
 }
 
 struct Circle {
-	Point center
+	Point center,
 	flt radius
 }
 
 TaggedUnion Shape {
-	Circle cir
+	Circle cir,
 	Rectangle rec
 }
 
 fun circleArea(&Circle c) -> flt {
-	return (3.14 * c.radius**)
+	return (3.14 * c.radius**2)
 }
 
 fun rectangleArea(&rectangle r) -> flt {
@@ -332,6 +323,7 @@ fun shapeArea(&Shape s) -> flt {
 			return rectangleArea(value)
 		}
 	}
+}
 
 
 fun runFun() -> void {
@@ -347,7 +339,7 @@ fun runFun() -> void {
 	} elif (cArea < rArea) {
 		print("rec won")
 	} else {
-		print("draw)
+		print("draw")
 	}
 }
 
@@ -379,67 +371,73 @@ program                = statment, {statment} ;
 
 statment               = structure
                        | function
-                       | expresion;
+                       | block;
 
-structure              = ("struct" | "TaggedUnion"), name, "{, var_declar_l, {var_declar_l}, "}";
+structure              = ("struct" | "TaggedUnion"), name, "{", var_declar_l, {",", var_declar_l}, "}";
 
-function               = "fun", name, "(", {var_declar}, ")", "-", ">", (type | "void"), "{", expresion, {expresion} "}";
+function               = "fun", name, "(", [var_declar, {",", var_declar_l}], ")", "-", ">", (type | "void"), "{", block, {block} "}";
 
-expresion              = conditional
-                       | variable
-                       | function_call
-                       | arithmatic_standalone
-                       | matchExp
-                       | comment
-                       | returnExp;
+block                  = conditional
+                       | variable_init
+                       | name_block
+                       | match_block
+                       | break_block
+                       | return_block;
 
-returnExp              = "return", value;
+name_block             = name,  (variable_assignemt | function_call | arithmatic_standalone | name_variable_init | struct_param_assign);
 
-matchExp               = "match", (name | function_call), "{", matchCase, {matchCase}, "}";
-matchCase              = customTypeName, ".", name, "(", name, ")", "{", expresion, {expresion}, "}"
+return_block           = "return", expression;
+
+match_block            = "match", name, "{", match_case, {match_case}, "}";
+match_case             = customTypeName, ".", name, "(", name, ")", "{", block, {block}, "}";
+
+break_block            = "break";
+return_block           = "return", expression; 
 
 conditional            = if_condition
-                        | loop_condition;
-if_condition           = "if", condition, "{", expresion, {expresion} "}", {"elif", condition, "{", expresion, {expresion} "}"} ["else", "{", expresion, {expresion} "}"]
-loop_condition         = "while", condition, "{", expresion, {expresion} "}" ;
-condition              = "(", and_condition, ["or", and_condition], ")";
-and_condition          = check, {"and", check};
-check                  = name
-                       | test
-                       | bool ;
-test                   = value, tester, value;
-tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
+                       | loop_condition;
+if_condition           = "if", condition, "{", block, { block } "}", {"elif", condition, "{", block, {block} "}"} ["else", "{", block, {block} "}"],
+loop_condition         = "while", condition, "{", block, { block } "}" ;
+condition              = "(", expression, ")";
 
-function_call          = [name, "."], name "(", [value, {"," value}] ")"; (* also method call *)
 
-variable               = ["gscope"], ["const"], [type], name, "=", value;
+function_call          = "(", [expression, {"," expression}] ")"; (* also method call *)
+
+variable_init          = ["gscope"], ["const"], type, name, "=", expression;
+name_variable_init     = name, "=", expression; (*type read as a name*)
+variable_assignemt     = "=", expression;
+struct_param_assign    = {".", name}, "=" expression;
+
 
 var_declar             = type, name;
 var_declar_l           = ["const"], var_declar;
 
-type                   = ["&"], (normalType | customTypeName);
-normalType             = "int" | "flt" | "str" | "bool";
-name                   = [&], "[a-zA-Z][a-zA-Z0-9]*";
-numeric_value          = int | flt;
-int                    = non-zero-digit, {digit};
-flt                    = int, ".", digit;
-str                    = "\"[^"]*\"";
-bool                   = "true" | "false";
-value                  = int | flt | str | name | arithmetic_result | function_call;
-customTypeName         = name;
-digit                  = "[0-9]"
-non-zero-digit         = "[1-9]"
+
+expression             = and_condition, ["or", and_condition],
+and_condition          = logical_exp, ["and", logical_exp];
+
+logical_exp            = arithmetic_result , [tester,  arithmetic_result ];
+tester                 = "<" | "<=" | ">" | ">=" | "==" | "!=";
+
+arithmetic_result      = arithmetic_2tier, {("+" | "-"), arithmetic_2tier};
+arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%"), arithmetic_3tier};
+arithmetic_3tier       = value, {"**", value};
+
+value                  = ([-] | ["not"] ), (literal | name_value | "(" expression ")");
+
+literal                = int | flt | str | bool | name_value;
+name_value             = name, (variable_call | struct_init_or_call | function_call); (* just name is variable call *)
+struct_init_or_call    = ".", name, {".", name}, [struct_init];
+struct_init            = "(" expression ")";
+
+
+type                   = ["&"], name;
 comment                = "#.*$"
 
-arithmatic_standalone  = name, ("++" | ("+=" (name | numeric_value) ))
+arithmatic_standalone  = ("++" | ("+=" (name | numeric_expression) ));
 
-arithmetic_result      = arithmetic_2tier, {("+" | "-", ""+=), arithmetic_2tier};
-arithmetic_2tier       = arithmetic_3tier, {("*" | "/" | "%"), arithmetic_3tier};
-arithmetic_3tier       = arithmetic_prod, ["++", "**"];
-arithmetic_prod        = numeric_value | value | "(" , arithmetic_result, ")";
 ```
 
-#QUESTION jak wziąść pod uwagę komentarze na końcu lini
 ### Specyfikacja technologiczna
 
 #### Technologie
@@ -485,8 +483,12 @@ java -jar Speed.jar fileName --recursion-limit=800
 - Zakres int-a-> (-2147483647, 2147483647)
 - Dokładność float-a -> zakres taki sam jak int, oraz 6 cyfr po przecinku
 - Max długość string-a -> 200 
-
-TODO:
-- testy duże
 ### Covrege testów jednostkowych:
 ![[Pasted image 20240410223636.png]]
+
+### Parser
+#### Diagram klas:
+![[parser-tree.png]]
+#### Pokrycie testów:
+![[Pasted image 20240508221945.png]]
+niskie pokrycie wynika między innymi z nie testowania get-erów i set-erów klas

@@ -1,7 +1,9 @@
 package lekser.exceptions;
 
 
-public class NoValueToken extends Exception {
+import exceptions.AnalizerException;
+
+public class NoValueToken extends AnalizerException {
 
     public NoValueToken(String txt) {
         super(txt);

@@ -1,10 +1,10 @@
 package lekser.exceptions;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import inputHandle.Position;
 
 public class NumberOutOfBoundsException extends LekserException {
 
-    public NumberOutOfBoundsException(ImmutablePair<Integer, Integer> pos, String txt) {
+    public NumberOutOfBoundsException(Position pos, String txt) {
         super(pos, txt);
     }
 }

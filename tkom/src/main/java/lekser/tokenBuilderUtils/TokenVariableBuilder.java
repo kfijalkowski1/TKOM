@@ -1,5 +1,6 @@
 package lekser.tokenBuilderUtils;
 
+import inputHandle.Position;
 import inputHandle.Source;
 import lekser.Token;
 import lekser.TokenType;
@@ -26,13 +27,18 @@ public class TokenVariableBuilder {
             new AbstractMap.SimpleEntry<String, TokenType>("struct", TokenType.STRUCT_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("TaggedUnion", TokenType.TaggedUnion_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("const", TokenType.CONST_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("gscope", TokenType.GSCOPE_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("while", TokenType.WHILE_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("if", TokenType.IF_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("elif", TokenType.ELIF_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("else", TokenType.ELSE_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("and", TokenType.AND_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("or", TokenType.OR_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("not", TokenType.NOT_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("return", TokenType.RETURN_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("true", TokenType.TRUE_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("false", TokenType.FALSE_KEYWORD),
+            new AbstractMap.SimpleEntry<String, TokenType>("break", TokenType.BREAK_KEYWORD),
             new AbstractMap.SimpleEntry<String, TokenType>("void", TokenType.VOID_KEYWORD)
     );
 
@@ -41,7 +47,7 @@ public class TokenVariableBuilder {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         int counter = 0;
         while (Character.isLetter(src.getCurrentChar()) && counter < MAX_VARIABLE_NAME+1) {
             sb.append(src.getCurrentChar());
@@ -63,7 +69,7 @@ public class TokenVariableBuilder {
         if (src.getCurrentChar() != '#') {
             return null;
         }
-        ImmutablePair<Integer, Integer> pos = src.getPossition();
+        Position pos = src.getPossition();
         src.getNextChar();
 
         while (src.getCurrentChar() != '\n' && src.getCurrentChar() != '\r' && src.getCurrentChar() != END_OF_FILE ) {

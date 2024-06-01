@@ -1,6 +1,7 @@
 package lekser;
 
 import inputHandle.FileSource;
+import inputHandle.Position;
 import inputHandle.Source;
 import inputHandle.StringSource;
 import lekser.exceptions.*;
@@ -105,6 +106,9 @@ public class TokenBuilderTest {
     private static Stream<Arguments> operatorsSingularAndMultiple() {
         return Stream.of(
                 Arguments.of("+", List.of(TokenType.PLUS_OP)),
+                Arguments.of("true", List.of(TokenType.TRUE_KEYWORD)),
+                Arguments.of("false", List.of(TokenType.FALSE_KEYWORD)),
+                Arguments.of("break", List.of(TokenType.BREAK_KEYWORD)),
                 Arguments.of("-", List.of(TokenType.MINUS_OP)),
                 Arguments.of("*", List.of(TokenType.MULTIPLE_OP)),
                 Arguments.of("/", List.of(TokenType.DIVIDE_OP)),
@@ -198,9 +202,11 @@ public class TokenBuilderTest {
                 Arguments.of("struct", TokenType.STRUCT_KEYWORD),
                 Arguments.of("TaggedUnion", TokenType.TaggedUnion_KEYWORD),
                 Arguments.of("const", TokenType.CONST_KEYWORD),
+                Arguments.of("gscope", TokenType.GSCOPE_KEYWORD),
                 Arguments.of("while", TokenType.WHILE_KEYWORD),
                 Arguments.of("if", TokenType.IF_KEYWORD),
                 Arguments.of("elif", TokenType.ELIF_KEYWORD),
+                Arguments.of("else", TokenType.ELSE_KEYWORD),
                 Arguments.of("and", TokenType.AND_KEYWORD),
                 Arguments.of("or", TokenType.OR_KEYWORD),
                 Arguments.of("not", TokenType.NOT_KEYWORD),
@@ -279,7 +285,7 @@ public class TokenBuilderTest {
     @MethodSource("incorrectTokens")
     void testTokenIntIncorrectValueError(TokenType type, Object value) {
         Exception exception = assertThrows(IncorrectValueToken.class, () -> {
-            new Token(type, new ImmutablePair<>(1, 2), value);
+            new Token(type, new Position(true), value);
         });
     }
 
@@ -307,12 +313,12 @@ public class TokenBuilderTest {
     @ParameterizedTest
     @MethodSource("positionTests")
     @DisplayName("test reading of position")
-    void testPositions(String text, Integer column, Integer line) throws LekserException {
+    void testPositions(String text, Integer character, Integer line) throws LekserException {
         Source src = new StringSource(text);
         TokenBuilder tb = new TokenBuilder(src);
         Token firstToken = tb.getNextToken();
-        Assertions.assertEquals(column, firstToken.getPossition().left);
-        Assertions.assertEquals(line, firstToken.getPossition().right);
+        Assertions.assertEquals(character, firstToken.getPossition().getcharacter());
+        Assertions.assertEquals(line, firstToken.getPossition().getLine());
     }
 
     private static Stream<Arguments> positionTests() {
@@ -387,64 +393,65 @@ public class TokenBuilderTest {
                 new ImmutablePair<>(TokenType.CLOSE_SOFT_BRACKETS_OP, null),
                 new ImmutablePair<>(TokenType.CLOSE_SHARP_BRACKETS_OP, null),
                 new ImmutablePair<>(TokenType.CLOSE_SHARP_BRACKETS_OP, null)));
-        ArrayList<ImmutablePair<Integer, Integer>> positions = new ArrayList<>(Arrays.asList(
-                new ImmutablePair<>(1, 1), // fun
-                new ImmutablePair<>(5, 1), // runFun
-                new ImmutablePair<>(11, 1), // (
-                new ImmutablePair<>(12, 1), // )
-                new ImmutablePair<>(14, 1), // ->
-                new ImmutablePair<>(17, 1), // void
-                new ImmutablePair<>(22, 1), // {
-                new ImmutablePair<>(2, 2), // Circle
-                new ImmutablePair<>(9, 2), // c
-                new ImmutablePair<>(11, 2), // =
-                new ImmutablePair<>(13, 2), // Circle
-                new ImmutablePair<>(19, 2), // (
-                new ImmutablePair<>(20, 2), // Point
-                new ImmutablePair<>(25, 2), // (
-                new ImmutablePair<>(26, 2), // 1.2
-                new ImmutablePair<>(29, 2), // ,
-                new ImmutablePair<>(31, 2), // 2.1
-                new ImmutablePair<>(34, 2), // )
-                new ImmutablePair<>(35, 2), // ,
-                new ImmutablePair<>(37, 2), // 5.4
-                new ImmutablePair<>(40, 2), // )
-                new ImmutablePair<>(2, 3),  // Shape
-                new ImmutablePair<>(8, 3),  // cShape
-                new ImmutablePair<>(15, 3), // =
-                new ImmutablePair<>(17, 3), // Shape
-                new ImmutablePair<>(22, 3), // .
-                new ImmutablePair<>(23, 3), // cir
-                new ImmutablePair<>(26, 3), // (
-                new ImmutablePair<>(27, 3), // c
-                new ImmutablePair<>(28, 3), // )
-                new ImmutablePair<>(2, 4),  // flt
-                new ImmutablePair<>(6, 4),  // cArea
-                new ImmutablePair<>(12, 4), // =
-                new ImmutablePair<>(14, 4), // shapeArea
-                new ImmutablePair<>(23, 4), // (
-                new ImmutablePair<>(24, 4), // &
-                new ImmutablePair<>(25, 4), // cShape
-                new ImmutablePair<>(31, 4), // )
-                new ImmutablePair<>(2, 5),  // if
-                new ImmutablePair<>(5, 5),  // (
-                new ImmutablePair<>(6, 5),  // cArea
-                new ImmutablePair<>(12, 5), // >
-                new ImmutablePair<>(14, 5), // rArea
-                new ImmutablePair<>(19, 5), // )
-                new ImmutablePair<>(21, 5), // {
-                new ImmutablePair<>(4, 6),  // print
-                new ImmutablePair<>(9, 6),  // (
-                new ImmutablePair<>(10, 6),  // "Circle won"
-                new ImmutablePair<>(22, 6), // )
-                new ImmutablePair<>(2, 7),  // }
-                new ImmutablePair<>(1, 8))); // }
+        ArrayList<Position> positions = new ArrayList<>(Arrays.asList(
+                new Position(1, 1), // fun
+                new Position(5, 1), // runFun
+                new Position(11, 1), // (
+                new Position(12, 1), // )
+                new Position(14, 1), // ->
+                new Position(17, 1), // void
+                new Position(22, 1), // {
+                new Position(2, 2), // Circle
+                new Position(9, 2), // c
+                new Position(11, 2), // =
+                new Position(13, 2), // Circle
+                new Position(19, 2), // (
+                new Position(20, 2), // Point
+                new Position(25, 2), // (
+                new Position(26, 2), // 1.2
+                new Position(29, 2), // ,
+                new Position(31, 2), // 2.1
+                new Position(34, 2), // )
+                new Position(35, 2), // ,
+                new Position(37, 2), // 5.4
+                new Position(40, 2), // )
+                new Position(2, 3),  // Shape
+                new Position(8, 3),  // cShape
+                new Position(15, 3), // =
+                new Position(17, 3), // Shape
+                new Position(22, 3), // .
+                new Position(23, 3), // cir
+                new Position(26, 3), // (
+                new Position(27, 3), // c
+                new Position(28, 3), // )
+                new Position(2, 4),  // flt
+                new Position(6, 4),  // cArea
+                new Position(12, 4), // =
+                new Position(14, 4), // shapeArea
+                new Position(23, 4), // (
+                new Position(24, 4), // &
+                new Position(25, 4), // cShape
+                new Position(31, 4), // )
+                new Position(2, 5),  // if
+                new Position(5, 5),  // (
+                new Position(6, 5),  // cArea
+                new Position(12, 5), // >
+                new Position(14, 5), // rArea
+                new Position(19, 5), // )
+                new Position(21, 5), // {
+                new Position(4, 6),  // print
+                new Position(9, 6),  // (
+                new Position(10, 6),  // "Circle won"
+                new Position(22, 6), // )
+                new Position(2, 7),  // }
+                new Position(1, 8))); // }
 
         TokenBuilder tb = new TokenBuilder(src);
         Token token = tb.getNextToken();
         int curTokenId = 0;
         while (token.getTokenType() != TokenType.END_OF_TEXT) {
-            assertEquals(positions.get(curTokenId), token.getPossition());
+            assertEquals(positions.get(curTokenId).getLine(), token.getPossition().getLine());
+            assertEquals(positions.get(curTokenId).getcharacter(), token.getPossition().getcharacter());
             assertEquals(token.getTokenType(), values.get(curTokenId).left);
             if(!Objects.isNull(values.get(curTokenId).right)) {
                 assertEquals(token.getValue(), values.get(curTokenId).right);
@@ -465,47 +472,47 @@ public class TokenBuilderTest {
                 "   return rectangleArea(value)\n" +
                 "  }\n" +
                 " }");
-        ArrayList<ImmutablePair<Integer, Integer>> positions = new ArrayList<>(Arrays.asList(
-                new ImmutablePair<>(1, 1), // fun
-                new ImmutablePair<>(5, 1), // shapeArea
-                new ImmutablePair<>(14, 1), // (
-                new ImmutablePair<>(15, 1), // &
-                new ImmutablePair<>(16, 1), // Shape
-                new ImmutablePair<>(22, 1), // s
-                new ImmutablePair<>(23, 1), // )
-                new ImmutablePair<>(25, 1), // ->
-                new ImmutablePair<>(28, 1), // flt
-                new ImmutablePair<>(32, 1), // {
-                new ImmutablePair<>(2, 2),  // match
-                new ImmutablePair<>(8, 2),  // s
-                new ImmutablePair<>(10, 2), // {
-                new ImmutablePair<>(3, 3),  // Shape
-                new ImmutablePair<>(8, 3),  // .
-                new ImmutablePair<>(9, 3),  // cir
-                new ImmutablePair<>(12, 3), // (
-                new ImmutablePair<>(13, 3), // value
-                new ImmutablePair<>(18, 3), // )
-                new ImmutablePair<>(20, 3), // {
-                new ImmutablePair<>(4, 4),  // return
-                new ImmutablePair<>(11, 4), // circleArea
-                new ImmutablePair<>(21, 4), // (
-                new ImmutablePair<>(22, 4), // value
-                new ImmutablePair<>(27, 4), // )
-                new ImmutablePair<>(3, 5),  // }
-                new ImmutablePair<>(3, 6),  // Shape.rec
-                new ImmutablePair<>(8, 6),  // .
-                new ImmutablePair<>(9, 6),  // rec
-                new ImmutablePair<>(12, 6), // (
-                new ImmutablePair<>(13, 6), // value
-                new ImmutablePair<>(18, 6), // )
-                new ImmutablePair<>(20, 6), // {
-                new ImmutablePair<>(4, 7),  // return
-                new ImmutablePair<>(11, 7), // rectangleArea
-                new ImmutablePair<>(24, 7), // (
-                new ImmutablePair<>(25, 7), // value
-                new ImmutablePair<>(30, 7), // )
-                new ImmutablePair<>(3, 8),  // }
-                new ImmutablePair<>(2, 9)   // }
+        ArrayList<Position> positions = new ArrayList<>(Arrays.asList(
+                new Position(1, 1), // fun
+                new Position(5, 1), // shapeArea
+                new Position(14, 1), // (
+                new Position(15, 1), // &
+                new Position(16, 1), // Shape
+                new Position(22, 1), // s
+                new Position(23, 1), // )
+                new Position(25, 1), // ->
+                new Position(28, 1), // flt
+                new Position(32, 1), // {
+                new Position(2, 2),  // match
+                new Position(8, 2),  // s
+                new Position(10, 2), // {
+                new Position(3, 3),  // Shape
+                new Position(8, 3),  // .
+                new Position(9, 3),  // cir
+                new Position(12, 3), // (
+                new Position(13, 3), // value
+                new Position(18, 3), // )
+                new Position(20, 3), // {
+                new Position(4, 4),  // return
+                new Position(11, 4), // circleArea
+                new Position(21, 4), // (
+                new Position(22, 4), // value
+                new Position(27, 4), // )
+                new Position(3, 5),  // }
+                new Position(3, 6),  // Shape.rec
+                new Position(8, 6),  // .
+                new Position(9, 6),  // rec
+                new Position(12, 6), // (
+                new Position(13, 6), // value
+                new Position(18, 6), // )
+                new Position(20, 6), // {
+                new Position(4, 7),  // return
+                new Position(11, 7), // rectangleArea
+                new Position(24, 7), // (
+                new Position(25, 7), // value
+                new Position(30, 7), // )
+                new Position(3, 8),  // }
+                new Position(2, 9)   // }
         ));
         ArrayList<ImmutablePair<TokenType, Object>> values = new ArrayList<>(Arrays.asList(
                 new ImmutablePair<>(TokenType.FUN_KEYWORD, null),
