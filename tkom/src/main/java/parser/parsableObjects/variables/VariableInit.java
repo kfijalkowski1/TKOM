@@ -42,7 +42,7 @@ public class VariableInit extends ConstGlobalVariableDeclaration implements IVis
     }
 
 
-    public Object getValue() {
+    public Expression getValue() {
         return value;
     }
 }

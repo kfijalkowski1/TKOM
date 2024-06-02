@@ -96,7 +96,7 @@ public class VariableInitParser {
             if (!buildInTypes.contains(par.getToken().getTokenType())) {
                 throw new ParserException(par.getToken().getPosition(), "No type in variable declaration");
             }
-            type = par.getToken().getTokenType().toString(); // built in type will return not null
+            type = par.getToken().getTokenType().getType(); // built in type will return not null
             par.consumeToken();
         }
 

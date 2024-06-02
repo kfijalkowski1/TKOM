@@ -43,4 +43,12 @@ public class LiteralValue extends Expression implements IVisitable {
     public int hashCode() {
         return type.hashCode() + value.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "LiteralValue{" +
+                "type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }

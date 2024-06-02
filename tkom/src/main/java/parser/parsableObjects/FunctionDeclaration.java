@@ -1,6 +1,7 @@
 package parser.parsableObjects;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.variables.VariableDeclaration;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class FunctionDeclaration extends AbsFunctionDeclaration implements IVisitable {
+public class FunctionDeclaration extends Statement implements IVisitable {
     private final String name;
     private final String returnType;
     private final List<VariableDeclaration> parameters;
@@ -28,6 +29,10 @@ public class FunctionDeclaration extends AbsFunctionDeclaration implements IVisi
         return name;
     }
 
+    public String getReturnType() {
+        return returnType;
+    }
+
     public List<VariableDeclaration> getParameters() {
         return parameters;
     }
@@ -37,7 +42,7 @@ public class FunctionDeclaration extends AbsFunctionDeclaration implements IVisi
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

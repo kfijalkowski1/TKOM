@@ -1,19 +1,27 @@
 package interpreter;
 
 
-import inputHandle.FileSource;
 import inputHandle.Source;
 import inputHandle.StringSource;
-import lekser.Token;
+import interpreter.embedded.Value;
 import lekser.TokenBuilder;
+import parser.Parser;
+import parser.parsableObjects.Program;
 
-import java.io.IOException;
+import java.util.LinkedHashMap;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Source sr = new StringSource("int a = 5");
-        TokenBuilder tb = new TokenBuilder(sr);
-        System.out.println(tb.getNextToken().getTokenType());
+        Source src = new StringSource("print(10/0)");
+        TokenBuilder tokenBuilder = new TokenBuilder(src);
+        Parser parser = new Parser(tokenBuilder);
+        Program program = parser.parseProgram();
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpret(program);
 
+    }
+
+    private static void setVariable(Value va) {
+        va.setValue(10);
     }
 }

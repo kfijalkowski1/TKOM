@@ -1,6 +1,7 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.Statement;
 import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.blocks.Block;
@@ -16,7 +17,7 @@ public class ElIfConditional extends ConditionConditional implements IVisitable 
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

@@ -66,10 +66,10 @@ match gr {
 }
 ```
 ##### Rzutowanie typów
-- Ze względu na silne typowanie możliwym jest zmiana typu danej zmiennej aczkolwiek musi być to zrobione świadomie, operator rzutowania wygląda następująco <typ-na-który-rzutujemy>(zmienna), przykład:
+- Ze względu na silne typowanie możliwym jest zmiana typu danej zmiennej aczkolwiek musi być to zrobione świadomie, operator rzutowania wygląda następująco (typ-na-który-rzutujemy z wielkiej litery)(zmienna), przykład:
 ```
 int a = 8
-flt b = int(a)
+flt b = Flt(a)
 ```
 - Rzutowanie:
 	- `int` może być na:

@@ -206,7 +206,7 @@ class ParserTest {
                                 List.of(new MatchCase("Shape", "cir", "value",
                                         List.of(new ConstGlobalVariableDeclaration("a", "int", false, false, new Position())), new Position())), new Position())),
                 Arguments.of("Shape cShape = Shape.cir(c)",
-                        new VariableInit("cShape", "Shape", new StructInit("Shape", List.of("cir"), List.of(new VariableCall("c", new Position())), new Position()), false, false, new Position()))
+                        new VariableInit("cShape", "Shape", new TaggedUnionInit("Shape", List.of("cir"), new VariableCall("c", new Position()), new Position()), false, false, new Position()))
 
         );
     }
@@ -557,14 +557,14 @@ class ParserTest {
                                                                 new Position())), new Position()),
                                         false, false, new Position()),
                                 new VariableInit("cShape", "Shape",
-                                        new StructInit("Shape",
+                                        new TaggedUnionInit("Shape",
                                                 List.of("cir"),
-                                                List.of(new VariableCall("c", new Position())),
+                                                new VariableCall("c", new Position()),
                                                 new Position()), false, false, new Position()),
                                 new VariableInit("rShape", "Shape",
-                                        new StructInit("Shape",
+                                        new TaggedUnionInit("Shape",
                                                 List.of("rec"),
-                                                List.of(new VariableCall("r", new Position())),
+                                                new VariableCall("r", new Position()),
                                                 new Position()), false, false, new Position()),
                                 new VariableInit("cArea", "flt",
                                         new FunctionCall("shapeArea",
