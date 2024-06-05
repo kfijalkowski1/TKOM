@@ -22,7 +22,7 @@ public class LastValue {
             Object tmp = lastValue.get(lastValue.size() - 1);
             lastValue = lastValue.subList(0, lastValue.size() - 1);
             return (Value) tmp;
-        } catch (IncompatibleClassChangeError e) {
+        } catch (IncompatibleClassChangeError | IndexOutOfBoundsException e1) {
             throw new InterperterException("Expected a single value", pos);
         }
     }
@@ -35,6 +35,10 @@ public class LastValue {
         } catch (IncompatibleClassChangeError e) {
             throw new InterperterException("Expected a single value", pos);
         }
+    }
+
+    public void cutLastValue(int size) {
+        lastValue = lastValue.subList(0, size);
     }
 
     public int size() {

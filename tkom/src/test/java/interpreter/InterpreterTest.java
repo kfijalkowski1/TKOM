@@ -441,7 +441,7 @@ class InterpreterTest {
                 Arguments.of(
                         "int x = 5\n",
                         "x", new Value(5, "int", false, false), null, ""
-                ),Arguments.of(
+                ), Arguments.of(
                         "int x = - 5 - -10\n",
                         "x", new Value(5, "int", false, false), null, ""
                 ),
@@ -606,7 +606,7 @@ class InterpreterTest {
                                         print(value)
                                     }
                                 }
-                                
+                                                                
                                 """,
                         "a", new Value(1, "int", false, false), null, ""
                 ),
@@ -1114,6 +1114,53 @@ class InterpreterTest {
                 ),
                 Arguments.of(
                         """
+                                fun getVal(int a, int b) -> int {
+                                    return a + b
+                                }
+                                                                
+                                fun getNothing() -> void {
+                                    print("nothing")
+                                }
+                                                                
+                                fun getB() -> int {
+                                    getNothing()
+                                    return 5
+                                }
+                                                                
+                                int y = getVal(1, getB())
+                                                                
+                                                                
+                                """,
+                        "y", new Value(6, "int", false, false), null, ""
+                ),
+                Arguments.of(
+                        """
+                                fun getVal(int a, int b) -> int {
+                                    return a + b
+                                }
+                                                                
+                                fun getC() -> int {
+                                    return 1000
+                                }
+                                                                
+                                fun getNothing() -> void {
+                                    getC()
+                                    print("nothing")
+                                }
+                                                                
+                                fun getB() -> int {
+                                    getNothing()
+                                    return 5
+                                }
+                                                                
+                                int y = getVal(1, getB())
+                                                                
+                                                                
+                                """,
+                        "y", new Value(6, "int", false, false), null, ""
+                ),
+                Arguments.of(
+                        """
                                 fun getVal(int k) -> int {
                                     k += 5
                                     return k
@@ -1146,6 +1193,51 @@ class InterpreterTest {
                                 recursionFun(0)
                                 """,
                         "z", null, InterperterException.class, "Interpreter run into error: Max recursion of 500 reached, in line 3, character 5"
+                ),
+                Arguments.of(
+                        """
+                                fun returnValue() -> int {
+                                    return 5
+                                }
+                                                
+                                fun dontReturn() -> void {
+                                    returnValue()
+                                }
+                                                
+                                print(dontReturn())
+                                                
+                                """,
+                        "z", null, InterperterException.class, "Interpreter run into error: Expected a single value, in line 9, character 1"
+                ),
+                Arguments.of(
+                        """
+                                fun returnValue() -> int {
+                                    return 5
+                                }
+                                                
+                                fun dontReturn() -> void {
+                                    returnValue()
+                                }
+                                dontReturn()                
+                                print()
+                                                
+                                """,
+                        "z", null, InterperterException.class, "Interpreter run into error: Expected a single value in print call, in line 9, character 1"
+                ),
+                Arguments.of(
+                        """
+                                fun returnValue() -> int {
+                                    return 5
+                                }
+                                                
+                                fun dontReturn() -> void {
+                                    returnValue()
+                                }
+                                returnValue()                
+                                print()
+                                                
+                                """,
+                        "z", null, InterperterException.class, "Interpreter run into error: Expected a single value in print call, in line 9, character 1"
                 ),
                 Arguments.of(
                         """

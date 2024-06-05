@@ -195,32 +195,29 @@ public class Interpreter implements IVisitor {
 
     @Override
     public void visit(DivideResult divideResult) throws InterperterException {
-        divideResult.getLeft().accept(this);
-        divideResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(divideResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(divideResult.getPosition());
+        RightLeftValue values = getRightLeftValue(divideResult);
 
-        if (!(rightValue.isInteger() || rightValue.isFloat())
-                ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
+        if (!(values.rightValue().isInteger() || values.rightValue().isFloat())
+                ||  (!Objects.equals(values.rightValue().getType(), values.leftValue().getType())))
             throw new InterperterException("Incompatible types for division, expected int or float", divideResult.getPosition());
 
         // check for division by zero
-        if (rightValue.isInteger() && (Integer) rightValue.getValue() == 0 ||
-                (rightValue.getType().equals("flt") && (Float) rightValue.getValue() == 0.0f))
+        if (values.rightValue().isInteger() && (Integer) values.rightValue().getValue() == 0 ||
+                (values.rightValue().getType().equals("flt") && (Float) values.rightValue().getValue() == 0.0f))
             throw new InterperterException("Division by zero", divideResult.getPosition());
 
         // return int division
-        if (rightValue.isInteger()) {
-            lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) / ( (Integer) rightValue.getValue()),
-                    leftValue.getType(),
+        if (values.rightValue().isInteger()) {
+            lastValue.addLastValue(new Value(((Integer) values.leftValue().getValue()) / ( (Integer) values.rightValue().getValue()),
+                    values.leftValue().getType(),
                     false,
                     false));
             return; }
 
         // return float division
-        else if ("flt".equals(rightValue.getType())) {
-            lastValue.addLastValue(new Value(((Float) leftValue.getValue()) / ((Float) rightValue.getValue()),
-                    leftValue.getType(),
+        else if ("flt".equals(values.rightValue().getType())) {
+            lastValue.addLastValue(new Value(((Float) values.leftValue().getValue()) / ((Float) values.rightValue().getValue()),
+                    values.leftValue().getType(),
                     false,
                     false));
             return; }
@@ -228,23 +225,22 @@ public class Interpreter implements IVisitor {
     }
 
 
+
+
     @Override
     public void visit(ModuloResult moduloResult) throws InterperterException {
-        moduloResult.getLeft().accept(this);
-        moduloResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(moduloResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(moduloResult.getPosition());
+        RightLeftValue values = getRightLeftValue(moduloResult);
 
-        if (!(rightValue.isInteger() || rightValue.isInteger()))
+        if (!values.rightValue.isInteger() || !values.leftValue.isInteger())
             throw new InterperterException("Incompatible types for modulo, expected int", moduloResult.getPosition());
 
-        // check for division by zero
-        if ((Integer) rightValue.getValue() == 0)
+        // check for modulo by zero
+        if ((Integer) values.rightValue.getValue() == 0)
             throw new InterperterException("Cant run modulo by zero", moduloResult.getPosition());
 
         // return value
-        lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) % ( (Integer) rightValue.getValue()),
-                leftValue.getType(),
+        lastValue.addLastValue(new Value(((Integer) values.leftValue.getValue()) % ( (Integer) values.rightValue.getValue()),
+                values.leftValue.getType(),
                 false,
                 false));
 
@@ -252,39 +248,36 @@ public class Interpreter implements IVisitor {
 
     @Override
     public void visit(MultiplyResult multiplyResult) throws InterperterException {
-        multiplyResult.getLeft().accept(this);
-        multiplyResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(multiplyResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(multiplyResult.getPosition());
+        RightLeftValue values = getRightLeftValue(multiplyResult);
 
-        if (leftValue.isString() && rightValue.isInteger()) { // create string multiplication
+        if (values.leftValue.isString() && values.rightValue.isInteger()) { // create string multiplication
             lastValue.addLastValue(
                     new Value(
-                            String.valueOf(leftValue.getValue())
-                                    .repeat(Math.max(0, (Integer) rightValue.getValue())),
-                            leftValue.getType(), false, false));
+                            String.valueOf(values.leftValue.getValue())
+                                    .repeat(Math.max(0, (Integer) values.rightValue.getValue())),
+                            values.leftValue.getType(), false, false));
             return;
         }
 
-        if (!(rightValue.isInteger() || rightValue.isFloat())
-                ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
+        if (!(values.rightValue.isInteger() || values.rightValue.isFloat())
+                ||  (!Objects.equals(values.rightValue.getType(), values.leftValue.getType())))
             throw new InterperterException("Incompatible types for multiplication, expected int or float", multiplyResult.getPosition());
 
 
         // return int multiplication
-        if (rightValue.isInteger()) {
-            lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) * ( (Integer) rightValue.getValue()),
-                    leftValue.getType(),
+        if (values.rightValue.isInteger()) {
+            lastValue.addLastValue(new Value(((Integer) values.leftValue.getValue()) * ( (Integer) values.rightValue.getValue()),
+                    values.leftValue.getType(),
                     false,
                     false));
             return; }
 
         // return float multiplication
-        else if (rightValue.isFloat()) {
-            Float resVal = (Float) leftValue.getValue() * (Float) rightValue.getValue();
+        else if (values.rightValue.isFloat()) {
+            Float resVal = (Float) values.leftValue.getValue() * (Float) values.rightValue.getValue();
             checkResValue(resVal, multiplyResult.getPosition());
-            lastValue.addLastValue(new Value(((Float) leftValue.getValue()) * ((Float) rightValue.getValue()),
-                    leftValue.getType(),
+            lastValue.addLastValue(new Value(((Float) values.leftValue.getValue()) * ((Float) values.rightValue.getValue()),
+                    values.leftValue.getType(),
                     false,
                     false));
             return; }
@@ -295,28 +288,25 @@ public class Interpreter implements IVisitor {
 
     @Override
     public void visit(PowResult powResult) throws InterperterException {
-        powResult.getLeft().accept(this);
-        powResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(powResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(powResult.getPosition());
+        RightLeftValue values = getRightLeftValue(powResult);
 
-        if (!(leftValue.isInteger() || leftValue.isFloat()) || !(rightValue.isInteger()))
+        if (!(values.leftValue.isInteger() || values.leftValue.isFloat()) || !(values.rightValue.isInteger()))
             throw new InterperterException("Incompatible types for multiplication, " +
                     "expected int or float for base and int for pow", powResult.getPosition());
 
         // return int pow
-        if (leftValue.isInteger()) {
-            lastValue.addLastValue(new Value((int) (Math.pow((Integer) leftValue.getValue(), (Integer) rightValue.getValue())),
-                    leftValue.getType(),
+        if (values.leftValue.isInteger()) {
+            lastValue.addLastValue(new Value((int) (Math.pow((Integer) values.leftValue.getValue(), (Integer) values.rightValue.getValue())),
+                    values.leftValue.getType(),
                     false,
                     false));}
 
         // return float pow
-        else if (leftValue.isFloat()) {
-            Float res = (float) Math.pow((Float) leftValue.getValue(), (Integer) rightValue.getValue());
+        else if (values.leftValue.isFloat()) {
+            Float res = (float) Math.pow((Float) values.leftValue.getValue(), (Integer) values.rightValue.getValue());
             checkResValue(res, powResult.getPosition());
             lastValue.addLastValue(new Value(res,
-                    leftValue.getType(),
+                    values.leftValue.getType(),
                     false,
                     false));}
 
@@ -324,61 +314,55 @@ public class Interpreter implements IVisitor {
 
     @Override
     public void visit(SubtractResult subtractResult) throws InterperterException {
-        subtractResult.getLeft().accept(this);
-        subtractResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(subtractResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(subtractResult.getPosition());
+        RightLeftValue values = getRightLeftValue(subtractResult);
 
-        if (!(rightValue.isInteger() || rightValue.isFloat())
-                ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
+        if (!(values.rightValue.isInteger() || values.rightValue.isFloat())
+                ||  (!Objects.equals(values.rightValue.getType(), values.leftValue.getType())))
             throw new InterperterException("Incompatible types for subtraction, expected int or float", subtractResult.getPosition());
 
         // return int subtraction
-        if (rightValue.isInteger()) {
-            lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) - ( (Integer) rightValue.getValue()),
-                    leftValue.getType(),
+        if (values.rightValue.isInteger()) {
+            lastValue.addLastValue(new Value(((Integer) values.leftValue.getValue()) - ( (Integer) values.rightValue.getValue()),
+                    values.leftValue.getType(),
                     false,
                     false));}
 
         // return float subtraction
-        else if (rightValue.isFloat()) {
-            Float res = (Float) leftValue.getValue() - (Float) rightValue.getValue();
+        else if (values.rightValue.isFloat()) {
+            Float res = (Float) values.leftValue.getValue() - (Float) values.rightValue.getValue();
             checkResValue(res, subtractResult.getPosition());
             lastValue.addLastValue(new Value(res,
-                    leftValue.getType(),
+                    values.leftValue.getType(),
                     false,
                     false));}
     }
 
     @Override
     public void visit(AddResult addResult) throws InterperterException {
-        addResult.getLeft().accept(this);
-        addResult.getRight().accept(this);
-        Value rightValue = lastValue.getSingleLastValue(addResult.getPosition());
-        Value leftValue = lastValue.getSingleLastValue(addResult.getPosition());
+        RightLeftValue values = getRightLeftValue(addResult);
 
-        if (!(rightValue.isInteger() || rightValue.isFloat() || rightValue.isString())
-                ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
+        if (!(values.rightValue.isInteger() || values.rightValue.isFloat() || values.rightValue.isString())
+                ||  (!Objects.equals(values.rightValue.getType(), values.leftValue.getType())))
             throw new InterperterException("Incompatible types for subtraction, expected int or float", addResult.getPosition());
 
         // return int sum
-        if (rightValue.isInteger()) {
-            lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) + ( (Integer) rightValue.getValue()),
-                    leftValue.getType(),
+        if (values.rightValue.isInteger()) {
+            lastValue.addLastValue(new Value(((Integer) values.leftValue.getValue()) + ( (Integer) values.rightValue.getValue()),
+                    values.leftValue.getType(),
                     false,
                     false));}
 
         // return float sum
-        else if (rightValue.isFloat()) {
-            Float res = (Float) leftValue.getValue() + (Float) rightValue.getValue();
+        else if (values.rightValue.isFloat()) {
+            Float res = (Float) values.leftValue.getValue() + (Float) values.rightValue.getValue();
             checkResValue(res, addResult.getPosition());
             lastValue.addLastValue(new Value(res,
-                    leftValue.getType(),
+                    values.leftValue.getType(),
                     false,
                     false));}
-        else if (rightValue.isString()) {
-            lastValue.addLastValue(new Value((String) leftValue.getValue() + (String) rightValue.getValue(),
-                    leftValue.getType(),
+        else if (values.rightValue.isString()) {
+            lastValue.addLastValue(new Value((String) values.leftValue.getValue() + (String) values.rightValue.getValue(),
+                    values.leftValue.getType(),
                     false,
                     false));}
     }
@@ -436,12 +420,17 @@ public class Interpreter implements IVisitor {
         List<Value> funcCallValues = new Vector<>();
         for (Statement arg : functionCall.getArgs()) {
             arg.accept(this);
-            funcCallValues.add(lastValue.getSingleLastValue(functionCall.getPosition()));
+            Value val =lastValue.getSingleLastValue(functionCall.getPosition());
+            if (val == null)
+                throw new InterperterException("Function " + functionCall.getName() + " does not exist", functionCall.getPosition());
+            funcCallValues.add(val);
         }
 
         Context functionContext = new Context();
         contextStack.add(functionContext);
         callStack.add(new ImmutablePair<>(functionCall.getName(), functionCall.getPosition()));
+
+        int befoureFunctionLastValSize = lastValue.size();
 
         lastValue.addLastValue(funcCallValues);
         functionCallCounter++;
@@ -452,6 +441,12 @@ public class Interpreter implements IVisitor {
             functionCallCounter--;
             contextStack.remove(functionContext);
             callStack.remove(callStack.size() - 1);
+        }
+
+        if (functions.get(functionCall.getName()) instanceof DynamicFunction dynamicFunction) {
+            if (Objects.equals(dynamicFunction.getReturnType(), "void")) {
+                lastValue.cutLastValue(befoureFunctionLastValSize);
+            }
         }
     }
 
@@ -1022,5 +1017,17 @@ public class Interpreter implements IVisitor {
     private void checkResValue(Float resVal, Position position) throws InterperterException {
         if (Math.abs(resVal) > MAX_INT)
             throw new InterperterException("Integer overflow", position);
+    }
+
+    private RightLeftValue getRightLeftValue(ArithmeticResult arithmaticResult) throws InterperterException {
+        arithmaticResult.getLeft().accept(this);
+        arithmaticResult.getRight().accept(this);
+        Value rightValue = lastValue.getSingleLastValue(arithmaticResult.getPosition());
+        Value leftValue = lastValue.getSingleLastValue(arithmaticResult.getPosition());
+        RightLeftValue values = new RightLeftValue(rightValue, leftValue);
+        return values;
+    }
+
+    private record RightLeftValue(Value rightValue, Value leftValue) {
     }
 }
