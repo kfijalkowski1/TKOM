@@ -1,6 +1,7 @@
 package parser.parsableObjects.structures;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.expression.StructCall;
@@ -17,9 +18,16 @@ public class StructValueAssigment extends Block implements IVisitable {
         this.assignedValue = value;
     }
 
+    public Expression getAssignedValue() {
+        return assignedValue;
+    }
+
+    public StructCall getStructCall() {
+        return structCall;
+    }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

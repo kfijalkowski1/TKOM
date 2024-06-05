@@ -1,6 +1,7 @@
 package parser.parsableObjects.variables;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.expression.Expression;
 import parser.visitators.IVisitable;
@@ -25,7 +26,7 @@ public class VariableAssigment extends Block implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

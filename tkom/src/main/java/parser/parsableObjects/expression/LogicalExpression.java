@@ -1,6 +1,7 @@
 package parser.parsableObjects.expression;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import lekser.TokenType;
 import parser.exceptions.ParserException;
 import parser.parsableObjects.blocks.Block;
@@ -15,7 +16,6 @@ public class LogicalExpression extends Expression implements IVisitable {
     TokenType tester;
 
 
-
     public LogicalExpression(Expression left, Expression right, TokenType tester, Position pos) throws ParserException {
         super(pos);
         if (!testers.contains(tester)) {
@@ -26,8 +26,20 @@ public class LogicalExpression extends Expression implements IVisitable {
         this.tester = tester;
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
+
+    public TokenType getTester() {
+        return tester;
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

@@ -1,6 +1,7 @@
 package parser.parsableObjects.blocks.arithmeticStandalone;
 import inputHandle.Position;
 
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.expression.VariableCall;
 import parser.visitators.IVisitable;
@@ -14,8 +15,12 @@ public class Increment extends ArithmaticStandalone implements IVisitable {
         this.value = value;
     }
 
+    public Expression getValue() {
+        return value;
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

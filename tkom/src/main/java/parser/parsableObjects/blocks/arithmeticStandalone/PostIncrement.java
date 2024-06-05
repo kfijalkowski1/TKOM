@@ -1,6 +1,7 @@
 package parser.parsableObjects.blocks.arithmeticStandalone;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.expression.VariableCall;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
@@ -10,8 +11,12 @@ public class PostIncrement extends ArithmaticStandalone implements IVisitable {
         super(variable, pos);
     }
 
+    public String getVariableName() {
+        return ((VariableCall) getVariable()).getName();
+    }
+
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

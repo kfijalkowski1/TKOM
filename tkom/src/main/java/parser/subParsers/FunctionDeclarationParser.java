@@ -80,7 +80,7 @@ public class FunctionDeclarationParser {
     private static String getReturnType(Parser parser, Position pos) throws LekserException, ParserException {
         String returnType = "";
         if (staticReturnTypes.contains(parser.getToken().getTokenType())) {
-            returnType = parser.getToken().getTokenType().toString();
+            returnType = parser.getToken().getTokenType().getType();
             parser.consumeToken();
         } else {
             returnType = (String) parser.mustBe(TokenType.NAME,

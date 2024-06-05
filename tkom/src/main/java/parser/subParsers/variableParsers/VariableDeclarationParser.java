@@ -57,7 +57,7 @@ public class VariableDeclarationParser {
             type = (String) parser.mustBe(TokenType.NAME,
                     new ParserException(pos, "No type in variable declaration"), true);
         } else {
-            type = parser.getToken().getTokenType().toString();
+            type = parser.getToken().getTokenType().getType();
         }
         parser.consumeToken();
 

@@ -28,7 +28,7 @@ public enum TokenType {
     TRUE_KEYWORD("true"),
     FALSE_KEYWORD("false"),
     BREAK_KEYWORD("break"),
-    NAME,
+        NAME,
     PLUS_OP,
     MINUS_OP,
     MULTIPLE_OP,
@@ -72,10 +72,11 @@ public enum TokenType {
 
     public String getType() {
         return switch (this) {
-            case INT_NUMBER -> "int";
-            case FLT_NUMBER -> "flt";
-            case STRING_VALUE -> "str";
-            case TRUE_KEYWORD, FALSE_KEYWORD -> "bool";
+            case INT_NUMBER, INT_KEYWORD -> "int";
+            case FLT_NUMBER, FLT_KEYWORD -> "flt";
+            case STRING_VALUE, STR_KEYWORD -> "str";
+            case VOID_KEYWORD -> "void";
+            case TRUE_KEYWORD, FALSE_KEYWORD, BOOL_KEYWORD -> "bool";
             default -> null;
         };
     }

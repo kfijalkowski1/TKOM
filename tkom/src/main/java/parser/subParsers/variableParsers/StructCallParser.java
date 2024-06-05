@@ -8,12 +8,13 @@ import parser.exceptions.ParserException;
 import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.expression.Expression;
 import parser.parsableObjects.expression.StructCall;
-import parser.parsableObjects.expression.StructInit;
+import parser.parsableObjects.expression.TaggedUnionInit;
 import parser.parsableObjects.structures.StructValueAssigment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static parser.subParsers.ExpressionParser.parseExpression;
 import static parser.utils.ParserUtils.getExpValue;
 import static parser.utils.ParserUtils.parseComaExpressions;
 
@@ -51,11 +52,11 @@ public class StructCallParser {
         // ( expression )
         if (par.getToken().getTokenType() == TokenType.OPEN_SOFT_BRACKETS_OP) {
             par.consumeToken();
-            List<Expression> values = parseComaExpressions(par, "Struct initialization");
+            Expression value = parseExpression(par);
             par.mustBe(TokenType.CLOSE_SOFT_BRACKETS_OP,
                     new ParserException(par.getToken().getPosition(), "No closing bracket in struct initialization"));
             par.consumeToken();
-            return new StructInit(structName, parameters, values, pos);
+            return new TaggedUnionInit(structName, parameters, value, pos);
         }
         return new StructCall(structName, parameters, pos);
 

@@ -1,6 +1,7 @@
 package parser.parsableObjects.expression;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -17,10 +18,17 @@ public class OrExpression extends Expression implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 
+    public Expression getLeft() {
+        return left;
+    }
+
+    public Expression getRight() {
+        return right;
+    }
 
     @Override
     public boolean equals(Object o) {

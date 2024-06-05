@@ -1,6 +1,7 @@
 package parser.parsableObjects.conditional;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.Statement;
 import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
@@ -15,7 +16,7 @@ public class ElseConditional extends Conditional implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 
