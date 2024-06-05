@@ -441,10 +441,22 @@ class InterpreterTest {
                 Arguments.of(
                         "int x = 5\n",
                         "x", new Value(5, "int", false, false), null, ""
+                ),Arguments.of(
+                        "int x = - 5 - -10\n",
+                        "x", new Value(5, "int", false, false), null, ""
+                ),
+                Arguments.of(
+                        "const int x\n" +
+                                "x = 5",
+                        "x", new Value(5, "int", false, true), null, ""
                 ),
                 Arguments.of(
                         "dsa x = 5\n",
                         "x", null, InterperterException.class, "Interpreter run into error: Type dsa does not exist, in line 1, character 1"
+                ),
+                Arguments.of(
+                        "int x = 2147483647 * 333335\n",
+                        "x", new Value(2147150313, "int", false, false), null, ""
                 ),
                 Arguments.of(
                         "flt x = 5.0\n",

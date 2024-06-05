@@ -34,6 +34,7 @@ import java.util.*;
 
 import static interpreter.embedded.Embedded.getEmbeddedFunctions;
 import static interpreter.embedded.Embedded.getEmbeddedTypes;
+import static lekser.tokenBuilderUtils.BuildersUtils.MAX_INT;
 
 public class Interpreter implements IVisitor {
     private static final Integer MAX_RECURSION_DEPTH = 500;
@@ -71,7 +72,6 @@ public class Interpreter implements IVisitor {
         String name = struct.getName();
         DynamicType structType = new DynamicType(new LinkedHashMap<>());
         setDynamicTypesFields(struct, name, structType);
-        // TODO add t functions list
         functions.put(name, new structInitFunction(struct.getPosition(), name));
     }
 
@@ -270,6 +270,7 @@ public class Interpreter implements IVisitor {
                 ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
             throw new InterperterException("Incompatible types for multiplication, expected int or float", multiplyResult.getPosition());
 
+
         // return int multiplication
         if (rightValue.isInteger()) {
             lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) * ( (Integer) rightValue.getValue()),
@@ -280,6 +281,8 @@ public class Interpreter implements IVisitor {
 
         // return float multiplication
         else if (rightValue.isFloat()) {
+            Float resVal = (Float) leftValue.getValue() * (Float) rightValue.getValue();
+            checkResValue(resVal, multiplyResult.getPosition());
             lastValue.addLastValue(new Value(((Float) leftValue.getValue()) * ((Float) rightValue.getValue()),
                     leftValue.getType(),
                     false,
@@ -287,6 +290,8 @@ public class Interpreter implements IVisitor {
             return; }
         throw new InterperterException("Incompatible types for multiplication", multiplyResult.getPosition());
     }
+
+
 
     @Override
     public void visit(PowResult powResult) throws InterperterException {
@@ -308,7 +313,9 @@ public class Interpreter implements IVisitor {
 
         // return float pow
         else if (leftValue.isFloat()) {
-            lastValue.addLastValue(new Value((float) Math.pow((Float) leftValue.getValue(), (Integer) rightValue.getValue()),
+            Float res = (float) Math.pow((Float) leftValue.getValue(), (Integer) rightValue.getValue());
+            checkResValue(res, powResult.getPosition());
+            lastValue.addLastValue(new Value(res,
                     leftValue.getType(),
                     false,
                     false));}
@@ -335,7 +342,9 @@ public class Interpreter implements IVisitor {
 
         // return float subtraction
         else if (rightValue.isFloat()) {
-            lastValue.addLastValue(new Value(((Float) leftValue.getValue()) - ((Float) rightValue.getValue()),
+            Float res = (Float) leftValue.getValue() - (Float) rightValue.getValue();
+            checkResValue(res, subtractResult.getPosition());
+            lastValue.addLastValue(new Value(res,
                     leftValue.getType(),
                     false,
                     false));}
@@ -352,16 +361,18 @@ public class Interpreter implements IVisitor {
                 ||  (!Objects.equals(rightValue.getType(), leftValue.getType())))
             throw new InterperterException("Incompatible types for subtraction, expected int or float", addResult.getPosition());
 
-        // return int subtraction
+        // return int sum
         if (rightValue.isInteger()) {
             lastValue.addLastValue(new Value(((Integer) leftValue.getValue()) + ( (Integer) rightValue.getValue()),
                     leftValue.getType(),
                     false,
                     false));}
 
-        // return float subtraction
+        // return float sum
         else if (rightValue.isFloat()) {
-            lastValue.addLastValue(new Value(((Float) leftValue.getValue()) + ((Float) rightValue.getValue()),
+            Float res = (Float) leftValue.getValue() + (Float) rightValue.getValue();
+            checkResValue(res, addResult.getPosition());
+            lastValue.addLastValue(new Value(res,
                     leftValue.getType(),
                     false,
                     false));}
@@ -453,7 +464,7 @@ public class Interpreter implements IVisitor {
             throw new InterperterException("Variable " + variableAssigment.getVariableName() + " does not exist",
                     variableAssigment.getPosition());
         // check if variable is const
-        if (variable.isConst())
+        if (variable.isConst() && !Objects.isNull(variable.getValue()))
             throw new InterperterException("Variable " + variableAssigment.getVariableName() + " is const",
                     variableAssigment.getPosition());
 
@@ -1006,5 +1017,10 @@ public class Interpreter implements IVisitor {
                     new ValueType(varDec.getType().getName(), false, varDec.isConst()));
         }
         variablesTypes.put(name, dynamicType);
+    }
+
+    private void checkResValue(Float resVal, Position position) throws InterperterException {
+        if (Math.abs(resVal) > MAX_INT)
+            throw new InterperterException("Integer overflow", position);
     }
 }
