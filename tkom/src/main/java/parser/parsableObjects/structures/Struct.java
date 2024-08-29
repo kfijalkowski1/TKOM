@@ -1,6 +1,7 @@
 package parser.parsableObjects.structures;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.variables.ConstVariableDeclaration;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
@@ -15,7 +16,7 @@ public class Struct extends Structure implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 }

@@ -1,6 +1,7 @@
 package parser.parsableObjects.match;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.Statement;
 import parser.parsableObjects.blocks.Block;
 import parser.visitators.IVisitable;
@@ -39,7 +40,7 @@ public class MatchCase extends Block implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 

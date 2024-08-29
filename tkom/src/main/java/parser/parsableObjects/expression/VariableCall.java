@@ -2,7 +2,6 @@ package parser.parsableObjects.expression;
 
 import inputHandle.Position;
 import interpreter.exceptions.InterperterException;
-import parser.parsableObjects.variables.Variable;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -24,6 +23,10 @@ public class VariableCall extends Expression implements IVisitable {
 
     public String getName() {
         return name;
+    }
+
+    public Boolean getReference() {
+        return isReference;
     }
 
     @Override

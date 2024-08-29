@@ -1,6 +1,7 @@
 package parser.parsableObjects.blocks;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.visitators.IVisitable;
 import parser.visitators.IVisitor;
 
@@ -10,7 +11,7 @@ public class BreakBlock extends Block implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 }

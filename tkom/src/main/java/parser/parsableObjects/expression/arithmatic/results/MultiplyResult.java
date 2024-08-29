@@ -1,6 +1,7 @@
 package parser.parsableObjects.expression.arithmatic.results;
 
 import inputHandle.Position;
+import interpreter.exceptions.InterperterException;
 import parser.parsableObjects.blocks.Block;
 import parser.parsableObjects.expression.Expression;
 import parser.visitators.IVisitable;
@@ -27,7 +28,7 @@ public class MultiplyResult extends ArithmeticResult implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor iv) {
+    public void accept(IVisitor iv) throws InterperterException {
         iv.visit(this);
     }
 }

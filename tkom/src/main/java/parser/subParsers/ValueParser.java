@@ -46,7 +46,7 @@ public class ValueParser {
         String name = (String) par.mustBe(TokenType.NAME,
                 new ParserException(par.getToken().getPosition(), "No name in reference variable"), true);
         par.consumeToken();
-        return new VariableCall(name, par.getToken().getPosition());
+        return new VariableCall(name, par.getToken().getPosition(), true);
     }
 
     /**
@@ -58,9 +58,9 @@ public class ValueParser {
         if (!buildInValues.contains(par.getToken().getTokenType())) {
             return null;
         } else if (par.getToken().getTokenType() == TokenType.TRUE_KEYWORD) {
-            return new LiteralValue(true, TokenType.TRUE_KEYWORD, par.getToken().getPosition());
+            return new LiteralValue(true, TokenType.BOOL_KEYWORD, par.getToken().getPosition());
         } else if (par.getToken().getTokenType() == TokenType.FALSE_KEYWORD) {
-            return new LiteralValue(false, TokenType.FALSE_KEYWORD, par.getToken().getPosition());
+            return new LiteralValue(false, TokenType.BOOL_KEYWORD, par.getToken().getPosition());
         }
         return new LiteralValue(par.getToken().getValue(), par.getToken().getTokenType(), par.getToken().getPosition());
     }
